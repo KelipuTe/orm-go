@@ -2,88 +2,78 @@ package v20
 
 import (
 	"context"
+	"orm-go/v20/clause"
 	"orm-go/v20/result"
-	"strings"
 )
 
-// S6OrmSelect Select 构造器
-// 用于构造查询语句
-type S6OrmSelect[T any] struct {
-	// s5select 查询的字段
-	s5select []canSelect
+// S6Select 用于构造 F8Select 语句
+type S6Select[T any] struct {
+	// s5select 查询子句，对应 select_expr
+	s5select []clause.I9SelectExpr
 	// tableName 表名
 	tableName string
-	// s5where where 语句
-	s5where []Predicate
-	// s5groupBy group by 语句
-	s5groupBy []S6Column
-	// s5having group by 的 having 语句
-	s5having []Predicate
-	// s5orderBy order by 语句
-	s5orderBy []OrderBy
-	// limit limit 子句
+	// s5where WHERE 子句
+	s5where []clause.S6WhereCondition
+	// s5GroupBy GROUP BY 子句
+	s5GroupBy []clause.S6Column
+	// s5having GROUP BY 的 HAVING 子句
+	s5having []clause.S6WhereCondition
+	// s5OrderBy ORDER BY 子句
+	s5OrderBy []clause.S6OrderBy
+	// limit LIMIT 行数
 	limit int
-	// offset offset 子句
+	// offset OFFSET 行数
 	offset int
-	// sqlString 构造出来的 SQL
-	sqlString strings.Builder
-	// s5parameter SQL 中占位符对应的数据
-	s5parameter []any
 
 	p7s6OrmDB *S6DB
 
-	s6query S6Query
+	s6QueryBuilder
+
+	s6query clause.S6Query
 }
 
-// canSelect 对应查询语句里 select 子句的列或者聚合函数
-type canSelect interface {
-	canSelect()
-}
-
-// Select 添加 select 子句
-func (p7this *S6OrmSelect[T]) Select(s5cs ...canSelect) *S6OrmSelect[T] {
-	if 0 >= len(s5cs) {
+// F8Select 添加查询子句
+func (p7this *S6Select[T]) F8Select(s5expr ...clause.I9SelectExpr) *S6Select[T] {
+	if 0 >= len(s5expr) {
 		return p7this
 	}
-
 	if nil == p7this.s5select {
-		p7this.s5select = s5cs
+		p7this.s5select = s5expr
 		return p7this
 	}
-	p7this.s5select = append(p7this.s5select, s5cs...)
+	p7this.s5select = append(p7this.s5select, s5expr...)
 	return p7this
 }
 
-// Where 添加 where 子句
-func (p7this *S6OrmSelect[T]) Where(s5w ...Predicate) *S6OrmSelect[T] {
-	if 0 >= len(s5w) {
+// F8Where 添加 where 子句
+func (p7this *S6Select[T]) F8Where(s5condition ...clause.S6WhereCondition) *S6Select[T] {
+	if 0 >= len(s5condition) {
 		return p7this
 	}
-
 	if nil == p7this.s5where {
-		p7this.s5where = s5w
+		p7this.s5where = s5condition
 		return p7this
 	}
-	p7this.s5where = append(p7this.s5where, s5w...)
+	p7this.s5where = append(p7this.s5where, s5condition...)
 	return p7this
 }
 
-// GroupBy 添加 group by 子句
-func (p7this *S6OrmSelect[T]) GroupBy(s5c ...S6Column) *S6OrmSelect[T] {
+// F8GroupBy 添加 group by 子句
+func (p7this *S6Select[T]) F8GroupBy(s5c ...clause.S6Column) *S6Select[T] {
 	if 0 >= len(s5c) {
 		return p7this
 	}
 
-	if nil == p7this.s5groupBy {
-		p7this.s5groupBy = s5c
+	if nil == p7this.s5GroupBy {
+		p7this.s5GroupBy = s5c
 		return p7this
 	}
-	p7this.s5groupBy = append(p7this.s5groupBy, s5c...)
+	p7this.s5GroupBy = append(p7this.s5GroupBy, s5c...)
 	return p7this
 }
 
-// Having 添加 having 子句
-func (p7this *S6OrmSelect[T]) Having(s5h ...Predicate) *S6OrmSelect[T] {
+// F8Having 添加 having 子句
+func (p7this *S6Select[T]) F8Having(s5h ...clause.S6WhereCondition) *S6Select[T] {
 	if 0 >= len(s5h) {
 		return p7this
 	}
@@ -96,41 +86,41 @@ func (p7this *S6OrmSelect[T]) Having(s5h ...Predicate) *S6OrmSelect[T] {
 	return p7this
 }
 
-// OrderBy 添加 order by 子句
-func (p7this *S6OrmSelect[T]) OrderBy(s5ob ...OrderBy) *S6OrmSelect[T] {
+// F8OrderBy 添加 order by 子句
+func (p7this *S6Select[T]) F8OrderBy(s5ob ...clause.S6OrderBy) *S6Select[T] {
 	if 0 >= len(s5ob) {
 		return p7this
 	}
 
-	if nil == p7this.s5orderBy {
-		p7this.s5orderBy = s5ob
+	if nil == p7this.s5OrderBy {
+		p7this.s5OrderBy = s5ob
 		return p7this
 	}
-	p7this.s5orderBy = append(p7this.s5orderBy, s5ob...)
+	p7this.s5OrderBy = append(p7this.s5OrderBy, s5ob...)
 	return p7this
 }
 
-// Limit 添加 limit 子句
-func (p7this *S6OrmSelect[T]) Limit(l int) *S6OrmSelect[T] {
-	p7this.limit = l
+// F8Limit 添加 LIMIT 行数
+func (p7this *S6Select[T]) F8Limit(rowCount int) *S6Select[T] {
+	p7this.limit = rowCount
 	return p7this
 }
 
-// Offset 添加 offset 子句
-func (p7this *S6OrmSelect[T]) Offset(o int) *S6OrmSelect[T] {
-	p7this.offset = o
+// F8Offset 添加 OFFSET 行数
+func (p7this *S6Select[T]) F8Offset(rowCount int) *S6Select[T] {
+	p7this.offset = rowCount
 	return p7this
 }
 
-// addParameter 添加占位符对应的参数
-func (p7this *S6OrmSelect[T]) addParameter(s5p ...any) {
-	if nil == p7this.s5parameter {
-		p7this.s5parameter = make([]any, 0, 2)
+// addQueryValue 添加占位符对应的参数
+func (p7this *S6Select[T]) addQueryValue(s5p ...any) {
+	if nil == p7this.s5value {
+		p7this.s5value = make([]any, 0, 2)
 	}
-	p7this.s5parameter = append(p7this.s5parameter, s5p...)
+	p7this.s5value = append(p7this.s5value, s5p...)
 }
 
-func (p7this *S6OrmSelect[T]) F8BuildQuery() (*S6Query, error) {
+func (p7this *S6Select[T]) F8BuildQuery() (*clause.S6Query, error) {
 	var err error
 
 	p7this.sqlString.WriteString("SELECT ")
@@ -158,9 +148,9 @@ func (p7this *S6OrmSelect[T]) F8BuildQuery() (*S6Query, error) {
 	}
 
 	// 处理 group by
-	if 0 < len(p7this.s5groupBy) {
+	if 0 < len(p7this.s5GroupBy) {
 		p7this.sqlString.WriteString(" GROUP BY ")
-		for i, t4gb := range p7this.s5groupBy {
+		for i, t4gb := range p7this.s5GroupBy {
 			if i > 0 {
 				p7this.sqlString.WriteByte(',')
 			}
@@ -181,40 +171,40 @@ func (p7this *S6OrmSelect[T]) F8BuildQuery() (*S6Query, error) {
 	}
 
 	// 处理 order by
-	if 0 < len(p7this.s5orderBy) {
+	if 0 < len(p7this.s5OrderBy) {
 		p7this.sqlString.WriteString(" ORDER BY ")
-		for i, t4ob := range p7this.s5orderBy {
+		for i, t4ob := range p7this.s5OrderBy {
 			if i > 0 {
 				p7this.sqlString.WriteByte(',')
 			}
-			err = p7this.buildColumn(t4ob.field)
+			err = p7this.buildColumn(t4ob.S6Column)
 			if nil != err {
 				return nil, err
 			}
 			p7this.sqlString.WriteByte(' ')
-			p7this.sqlString.WriteString(t4ob.order)
+			p7this.sqlString.WriteString(t4ob.OrderString)
 		}
 	}
 
 	// 处理 limit offset
 	if p7this.limit > 0 {
 		p7this.sqlString.WriteString(" LIMIT ?")
-		p7this.addParameter(p7this.limit)
+		p7this.addQueryValue(p7this.limit)
 	}
 	if p7this.offset > 0 {
 		p7this.sqlString.WriteString(" OFFSET ?")
-		p7this.addParameter(p7this.offset)
+		p7this.addQueryValue(p7this.offset)
 	}
 
 	p7this.sqlString.WriteString(";")
 
-	return &S6Query{
-		SQLString:   p7this.sqlString.String(),
-		S5parameter: p7this.s5parameter,
+	return &clause.S6Query{
+		SQLString: p7this.sqlString.String(),
+		S5Value:   p7this.s5value,
 	}, nil
 }
 
-func (p7this *S6OrmSelect[T]) buildSelect() error {
+func (p7this *S6Select[T]) buildSelect() error {
 	var err error
 
 	if 0 >= len(p7this.s5select) {
@@ -227,26 +217,26 @@ func (p7this *S6OrmSelect[T]) buildSelect() error {
 			p7this.sqlString.WriteByte(',')
 		}
 		switch t4s.(type) {
-		case S6Column:
+		case clause.S6Column:
 			// 处理列
-			t4c := t4s.(S6Column)
+			t4c := t4s.(clause.S6Column)
 			err = p7this.buildColumn(t4c)
 			if nil != err {
 				return err
 			}
-		case Aggregate:
+		case clause.S6Aggregate:
 			// 处理聚合函数
-			t4a := t4s.(Aggregate)
+			t4a := t4s.(clause.S6Aggregate)
 			err = p7this.buildAggregate(t4a)
 			if nil != err {
 				return err
 			}
-		case Raw:
+		case clause.S6PartRaw:
 			// 处理原生 sql
-			t4r := t4s.(Raw)
-			p7this.sqlString.WriteString(t4r.raw)
-			if 0 > len(t4r.s5parameter) {
-				p7this.addParameter(t4r.s5parameter...)
+			t4r := t4s.(clause.S6PartRaw)
+			p7this.sqlString.WriteString(t4r.SQLString)
+			if 0 > len(t4r.S5Value) {
+				p7this.addQueryValue(t4r.S5Value...)
 			}
 		}
 	}
@@ -254,15 +244,15 @@ func (p7this *S6OrmSelect[T]) buildSelect() error {
 }
 
 // buildColumn 处理列
-func (p7this *S6OrmSelect[T]) buildColumn(c S6Column) error {
+func (p7this *S6Select[T]) buildColumn(c clause.S6Column) error {
 	p7this.sqlString.WriteByte('`')
-	p7this.sqlString.WriteString(c.name)
+	p7this.sqlString.WriteString(c.Name)
 	p7this.sqlString.WriteByte('`')
 	return nil
 }
 
 // buildPredicate 处理查询条件
-func (p7this *S6OrmSelect[T]) buildPredicate(s5p []Predicate) error {
+func (p7this *S6Select[T]) buildPredicate(s5p []clause.S6WhereCondition) error {
 	t4p := s5p[0]
 	for i := 1; i < len(s5p); i++ {
 		t4p = t4p.And(s5p[i])
@@ -271,7 +261,7 @@ func (p7this *S6OrmSelect[T]) buildPredicate(s5p []Predicate) error {
 }
 
 // buildExpression 处理语句
-func (p7this *S6OrmSelect[T]) buildExpression(e Expression) error {
+func (p7this *S6Select[T]) buildExpression(e clause.I9Expr) error {
 	var err error
 
 	if nil == e {
@@ -279,15 +269,15 @@ func (p7this *S6OrmSelect[T]) buildExpression(e Expression) error {
 	}
 
 	switch e.(type) {
-	case Predicate:
+	case clause.S6WhereCondition:
 		// 处理语句
-		t4predicate := e.(Predicate)
+		t4predicate := e.(clause.S6WhereCondition)
 		// 递归处理左边的部分
-		_, lIsP := t4predicate.left.(Predicate)
+		_, lIsP := t4predicate.LeftExpr.(clause.S6WhereCondition)
 		if lIsP {
 			p7this.sqlString.WriteByte('(')
 		}
-		err = p7this.buildExpression(t4predicate.left)
+		err = p7this.buildExpression(t4predicate.LeftExpr)
 		if nil != err {
 			return err
 		}
@@ -297,50 +287,50 @@ func (p7this *S6OrmSelect[T]) buildExpression(e Expression) error {
 
 		// 处理中间的操作符
 		// 如果没有操作符，那么就是原生 sql，没有右边的部分
-		if "" == t4predicate.op.String() {
+		if "" == t4predicate.Operator.String() {
 			return nil
 		}
 		p7this.sqlString.WriteByte(' ')
-		p7this.sqlString.WriteString(t4predicate.op.String())
+		p7this.sqlString.WriteString(t4predicate.Operator.String())
 		p7this.sqlString.WriteByte(' ')
 		// 递归处理右边的部分
-		_, rIsP := t4predicate.right.(Predicate)
+		_, rIsP := t4predicate.RightExpr.(clause.S6WhereCondition)
 		if rIsP {
 			p7this.sqlString.WriteByte('(')
 		}
-		err = p7this.buildExpression(t4predicate.right)
+		err = p7this.buildExpression(t4predicate.RightExpr)
 		if nil != err {
 			return err
 		}
 		if rIsP {
 			p7this.sqlString.WriteByte(')')
 		}
-	case S6Column:
+	case clause.S6Column:
 		// 处理列名
-		t4c := e.(S6Column)
+		t4c := e.(clause.S6Column)
 		err = p7this.buildColumn(t4c)
 		if nil != err {
 			return err
 		}
-	case Aggregate:
+	case clause.S6Aggregate:
 		// 处理聚合函数
-		t4a := e.(Aggregate)
+		t4a := e.(clause.S6Aggregate)
 		err = p7this.buildAggregate(t4a)
 		if nil != err {
 			return err
 		}
-	case Raw:
+	case clause.S6PartRaw:
 		// 处理原生 sql
-		t4r := e.(Raw)
-		p7this.sqlString.WriteString(t4r.raw)
-		if 0 < len(t4r.s5parameter) {
-			p7this.addParameter(t4r.s5parameter...)
+		t4r := e.(clause.S6PartRaw)
+		p7this.sqlString.WriteString(t4r.SQLString)
+		if 0 < len(t4r.S5Value) {
+			p7this.addQueryValue(t4r.S5Value...)
 		}
-	case s6value:
+	case clause.S6Value:
 		// 处理占位符对应的参数
-		t4parameter := e.(s6value)
+		t4parameter := e.(clause.S6Value)
 		p7this.sqlString.WriteByte('?')
-		p7this.addParameter(t4parameter.value)
+		p7this.addQueryValue(t4parameter.Value)
 	default:
 		return NewErrUnsupportedExpressionType(e)
 	}
@@ -348,32 +338,32 @@ func (p7this *S6OrmSelect[T]) buildExpression(e Expression) error {
 }
 
 // buildAggregate 处理聚合函数
-func (p7this *S6OrmSelect[T]) buildAggregate(a Aggregate) error {
-	p7this.sqlString.WriteString(a.funcName)
+func (p7this *S6Select[T]) buildAggregate(a clause.S6Aggregate) error {
+	p7this.sqlString.WriteString(a.Name)
 	p7this.sqlString.WriteString("(`")
-	p7this.sqlString.WriteString(a.field.name)
+	p7this.sqlString.WriteString(a.S6Column.Name)
 	p7this.sqlString.WriteString("`)")
 	return nil
 }
 
-func NewS6OrmSelect[T any]() *S6OrmSelect[T] {
-	return &S6OrmSelect[T]{
+func NewS6OrmSelect[T any]() *S6Select[T] {
+	return &S6Select[T]{
 		tableName: "table_name",
 	}
 }
 
-// F8NewS6OrmSelect 构造 S6OrmSelect
-func F8NewS6OrmSelect[T any](p7s6db *S6DB, s6query S6Query) *S6OrmSelect[T] {
-	return &S6OrmSelect[T]{
+// F8NewS6OrmSelect 构造 S6Select
+func F8NewS6OrmSelect[T any](p7s6db *S6DB, s6query clause.S6Query) *S6Select[T] {
+	return &S6Select[T]{
 		p7s6OrmDB: p7s6db,
 		s6query:   s6query,
 	}
 }
 
 // F4Get 执行查询
-func (p7this *S6OrmSelect[T]) F4Get(i9ctx context.Context) (*T, error) {
+func (p7this *S6Select[T]) F4Get(i9ctx context.Context) (*T, error) {
 	// 执行查询
-	rows, err := p7this.p7s6OrmDB.p7s6SqlDB.QueryContext(i9ctx, p7this.s6query.SQLString, p7this.s6query.S5parameter...)
+	rows, err := p7this.p7s6OrmDB.p7s6SqlDB.QueryContext(i9ctx, p7this.s6query.SQLString, p7this.s6query.S5Value...)
 	if nil != err {
 		return nil, err
 	}

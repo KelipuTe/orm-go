@@ -33,8 +33,8 @@ func TestI9RegistryF8Get(p7tt *testing.T) {
 						Offset:     0,
 						FieldName:  "id",
 					},
-					"Name": {
-						StructName: "Name",
+					"S6Column": {
+						StructName: "S6Column",
 						I9Type:     reflect.TypeOf(""),
 						Offset:     8,
 						FieldName:  "name",
@@ -60,7 +60,7 @@ func TestI9RegistryF8Get(p7tt *testing.T) {
 						FieldName:  "id",
 					},
 					"name": {
-						StructName: "Name",
+						StructName: "S6Column",
 						I9Type:     reflect.TypeOf(""),
 						Offset:     8,
 						FieldName:  "name",
