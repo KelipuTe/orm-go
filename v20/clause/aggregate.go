@@ -10,13 +10,13 @@ type S6Aggregate struct {
 
 func (this S6Aggregate) F8SelectExpr() {}
 
-func (this S6Aggregate) F8Expr() {}
+func (this S6Aggregate) F8Expression() {}
 
 func (this S6Aggregate) Equal(input any) S6WhereCondition {
 	return S6WhereCondition{
 		LeftExpr:  this,
 		Operator:  c5OperatorEqual,
-		RightExpr: NewI9Expr(input),
+		RightExpr: F8NewI9Expression(input),
 	}
 }
 
@@ -24,7 +24,7 @@ func (this S6Aggregate) GreaterThan(input any) S6WhereCondition {
 	return S6WhereCondition{
 		LeftExpr:  this,
 		Operator:  c5OperatorGreaterThan,
-		RightExpr: NewI9Expr(input),
+		RightExpr: F8NewI9Expression(input),
 	}
 }
 
@@ -32,7 +32,7 @@ func (this S6Aggregate) LessThan(input any) S6WhereCondition {
 	return S6WhereCondition{
 		LeftExpr:  this,
 		Operator:  c5OperatorLessThan,
-		RightExpr: NewI9Expr(input),
+		RightExpr: F8NewI9Expression(input),
 	}
 }
 

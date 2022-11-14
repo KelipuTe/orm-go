@@ -119,7 +119,7 @@ func (p7this *S6Insert[T]) F8BuildQuery() (*clause.S6Query, error) {
 			if err != nil {
 				return nil, err
 			}
-			p7this.addParameter(fdVal)
+			p7this.F8AddParameter(fdVal)
 		}
 
 		p7this.sqlString.WriteByte(')')

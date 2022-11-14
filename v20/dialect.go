@@ -34,7 +34,7 @@ func (p7this *s6MySQLDialect) f8BuildOnConflict(p7s6QueryBuilder *s6QueryBuilder
 			p7s6QueryBuilder.sqlString.WriteByte('`')
 			p7s6QueryBuilder.sqlString.WriteString(t4value2.Name)
 			p7s6QueryBuilder.sqlString.WriteString("=")
-			return p7s6QueryBuilder.buildExpression(t4value2.Expr)
+			return p7s6QueryBuilder.F8BuildExpression(t4value2.Expr)
 		default:
 			return NewErrUnsupportedExpressionType(t4value2)
 		}

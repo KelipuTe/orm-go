@@ -10,7 +10,7 @@ type S6PartRaw struct {
 
 func (this S6PartRaw) F8SelectExpr() {}
 
-func (this S6PartRaw) F8Expr() {}
+func (this S6PartRaw) F8Expression() {}
 
 func (this S6PartRaw) ToPredicate() S6WhereCondition {
 	return S6WhereCondition{

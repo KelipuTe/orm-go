@@ -5,14 +5,14 @@ package clause
 // S6WhereCondition 可以嵌套，组成复杂的查询条件
 type S6WhereCondition struct {
 	// LeftExpr 操作符左边的查询条件
-	LeftExpr I9Expr
+	LeftExpr I9Expression
 	// Operator 操作符
 	Operator s6Operator
 	// RightExpr 操作符右边的查询条件
-	RightExpr I9Expr
+	RightExpr I9Expression
 }
 
-func (this S6WhereCondition) F8Expr() {}
+func (this S6WhereCondition) F8Expression() {}
 
 // And 与，左查询条件 `与` 右查询条件 => (`Id` = 11) AND (S6Column = 'aa')
 func (this S6WhereCondition) And(p S6WhereCondition) S6WhereCondition {
