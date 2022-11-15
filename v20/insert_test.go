@@ -2,7 +2,6 @@ package v20
 
 import (
 	"github.com/stretchr/testify/assert"
-	"orm-go/v20/clause"
 	"testing"
 )
 
@@ -11,15 +10,15 @@ func TestS6OrmInsertF8Build(p7t *testing.T) {
 
 	s5case := []struct {
 		name      string
-		i9qb      clause.I9QueryBuilder
-		wantQuery *clause.S6Query
+		i9qb      I9QueryBuilder
+		wantQuery *S6Query
 		wantErr   error
 	}{
 		{
 			name: "insert",
 			i9qb: F8NewS6Insert[S6TestModel](p7s6DB).
 				F8SetValue(&S6TestModel{Id: 11, Name: "aa", Age: 22, Sex: 1}),
-			wantQuery: &clause.S6Query{
+			wantQuery: &S6Query{
 				SQLString: "INSERT INTO `test_model`(`id`,`name`,`age`,`sex`) VALUES(?,?,?,?);",
 				S5Value:   []any{11, "aa", int8(22), int8(1)},
 			},

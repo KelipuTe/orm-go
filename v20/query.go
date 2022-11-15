@@ -1,4 +1,4 @@
-package clause
+package v20
 
 // S6Query I9QueryBuilder.F8BuildQuery 的结果
 type S6Query struct {

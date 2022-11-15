@@ -1,7 +1,6 @@
 package v20
 
 import (
-	"orm-go/v20/clause"
 	"orm-go/v20/metadata"
 	"orm-go/v20/result"
 )
@@ -68,7 +67,7 @@ func (p7this *S6Insert[T]) F8SetColumnName(s5column ...string) *S6Insert[T] {
 	return p7this
 }
 
-func (p7this *S6Insert[T]) F8BuildQuery() (*clause.S6Query, error) {
+func (p7this *S6Insert[T]) F8BuildQuery() (*S6Query, error) {
 	if nil == p7this.p7s6Model {
 		t4p7s6model, err := p7this.s6Monitor.i9Registry.F8Get(p7this.s5Value[0])
 		if nil != err {
@@ -133,7 +132,7 @@ func (p7this *S6Insert[T]) F8BuildQuery() (*clause.S6Query, error) {
 	}
 
 	p7this.sqlString.WriteByte(';')
-	return &clause.S6Query{
+	return &S6Query{
 		SQLString: p7this.sqlString.String(),
 		S5Value:   p7this.s5value,
 	}, nil

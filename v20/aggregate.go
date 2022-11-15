@@ -1,4 +1,4 @@
-package clause
+package v20
 
 // S6Aggregate 对应聚合函数
 type S6Aggregate struct {
@@ -8,9 +8,21 @@ type S6Aggregate struct {
 	S6Column S6Column
 }
 
-func (this S6Aggregate) F8SelectExpr() {}
+func (this S6Aggregate) F8BuildAggregate(p7s6qb *s6QueryBuilder) error {
+	p7s6qb.sqlString.WriteString(this.Name)
+	p7s6qb.sqlString.WriteString("(`")
+	p7s6qb.sqlString.WriteString(this.S6Column.Name)
+	p7s6qb.sqlString.WriteString("`)")
+	return nil
+}
 
-func (this S6Aggregate) F8Expression() {}
+func (this S6Aggregate) F8BuildSelectExpr(p7s6qb *s6QueryBuilder) error {
+	return this.F8BuildAggregate(p7s6qb)
+}
+
+func (this S6Aggregate) F8BuildExpression(p7s6qb *s6QueryBuilder) error {
+	return this.F8BuildAggregate(p7s6qb)
+}
 
 func (this S6Aggregate) Equal(input any) S6WhereCondition {
 	return S6WhereCondition{

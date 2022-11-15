@@ -1,38 +1,35 @@
 package v20
 
 import (
-	"orm-go/v20/clause"
+	"context"
+	"orm-go/v20/result"
 )
 
 // S6Select 用于构造 F8Select 语句
 type S6Select[T any] struct {
 	// s5select 查询子句，对应 select_expr
-	s5select []clause.I9SelectExpr
+	s5select []I9SelectExpr
 	// tableName 表名
 	tableName string
 	// s5where WHERE 子句
-	s5where []clause.S6WhereCondition
+	s5where []S6WhereCondition
 	// s5GroupBy GROUP BY 子句
-	s5GroupBy []clause.S6Column
+	s5GroupBy []S6Column
 	// s5having GROUP BY 的 HAVING 子句
-	s5having []clause.S6WhereCondition
+	s5having []S6WhereCondition
 	// s5OrderBy ORDER BY 子句
-	s5OrderBy []clause.S6OrderBy
+	s5OrderBy []S6OrderBy
 	// limit LIMIT 行数
 	limit int
 	// offset OFFSET 行数
 	offset int
 
-	p7s6OrmDB *S6DB
-
 	i9session I9Session
 	s6QueryBuilder
-
-	s6query clause.S6Query
 }
 
 // F8Select 添加查询子句
-func (p7this *S6Select[T]) F8Select(s5expr ...clause.I9SelectExpr) *S6Select[T] {
+func (p7this *S6Select[T]) F8Select(s5expr ...I9SelectExpr) *S6Select[T] {
 	if 0 >= len(s5expr) {
 		return p7this
 	}
@@ -45,7 +42,7 @@ func (p7this *S6Select[T]) F8Select(s5expr ...clause.I9SelectExpr) *S6Select[T] 
 }
 
 // F8Where 添加 where 子句
-func (p7this *S6Select[T]) F8Where(s5condition ...clause.S6WhereCondition) *S6Select[T] {
+func (p7this *S6Select[T]) F8Where(s5condition ...S6WhereCondition) *S6Select[T] {
 	if 0 >= len(s5condition) {
 		return p7this
 	}
@@ -58,7 +55,7 @@ func (p7this *S6Select[T]) F8Where(s5condition ...clause.S6WhereCondition) *S6Se
 }
 
 // F8GroupBy 添加 group by 子句
-func (p7this *S6Select[T]) F8GroupBy(s5column ...clause.S6Column) *S6Select[T] {
+func (p7this *S6Select[T]) F8GroupBy(s5column ...S6Column) *S6Select[T] {
 	if 0 >= len(s5column) {
 		return p7this
 	}
@@ -71,7 +68,7 @@ func (p7this *S6Select[T]) F8GroupBy(s5column ...clause.S6Column) *S6Select[T] {
 }
 
 // F8Having 添加 having 子句
-func (p7this *S6Select[T]) F8Having(s5condition ...clause.S6WhereCondition) *S6Select[T] {
+func (p7this *S6Select[T]) F8Having(s5condition ...S6WhereCondition) *S6Select[T] {
 	if 0 >= len(s5condition) {
 		return p7this
 	}
@@ -84,7 +81,7 @@ func (p7this *S6Select[T]) F8Having(s5condition ...clause.S6WhereCondition) *S6S
 }
 
 // F8OrderBy 添加 order by 子句
-func (p7this *S6Select[T]) F8OrderBy(s5OrderBy ...clause.S6OrderBy) *S6Select[T] {
+func (p7this *S6Select[T]) F8OrderBy(s5OrderBy ...S6OrderBy) *S6Select[T] {
 	if 0 >= len(s5OrderBy) {
 		return p7this
 	}
@@ -108,7 +105,7 @@ func (p7this *S6Select[T]) F8Offset(rowCount int) *S6Select[T] {
 	return p7this
 }
 
-func (p7this *S6Select[T]) F8BuildQuery() (*clause.S6Query, error) {
+func (p7this *S6Select[T]) F8BuildQuery() (*S6Query, error) {
 	var err error
 
 	p7this.sqlString.WriteString("SELECT ")
@@ -138,11 +135,11 @@ func (p7this *S6Select[T]) F8BuildQuery() (*clause.S6Query, error) {
 	// 处理 group by
 	if 0 < len(p7this.s5GroupBy) {
 		p7this.sqlString.WriteString(" GROUP BY ")
-		for i, t4gb := range p7this.s5GroupBy {
+		for i, t4value := range p7this.s5GroupBy {
 			if i > 0 {
 				p7this.sqlString.WriteByte(',')
 			}
-			err = p7this.F8BuildColumn(t4gb)
+			err = t4value.F8BuildColumn(&p7this.s6QueryBuilder)
 			if nil != err {
 				return nil, err
 			}
@@ -161,16 +158,14 @@ func (p7this *S6Select[T]) F8BuildQuery() (*clause.S6Query, error) {
 	// 处理 order by
 	if 0 < len(p7this.s5OrderBy) {
 		p7this.sqlString.WriteString(" ORDER BY ")
-		for i, t4ob := range p7this.s5OrderBy {
+		for i, t4value := range p7this.s5OrderBy {
 			if i > 0 {
 				p7this.sqlString.WriteByte(',')
 			}
-			err = p7this.F8BuildColumn(t4ob.S6Column)
+			err = t4value.F8BuildOrderBy(&p7this.s6QueryBuilder)
 			if nil != err {
 				return nil, err
 			}
-			p7this.sqlString.WriteByte(' ')
-			p7this.sqlString.WriteString(t4ob.OrderString)
 		}
 	}
 
@@ -186,7 +181,7 @@ func (p7this *S6Select[T]) F8BuildQuery() (*clause.S6Query, error) {
 
 	p7this.sqlString.WriteString(";")
 
-	p7s6query := &clause.S6Query{
+	p7s6query := &S6Query{
 		SQLString: p7this.sqlString.String(),
 		S5Value:   p7this.s5value,
 	}
@@ -204,55 +199,68 @@ func (p7this *S6Select[T]) f8BuildSelect() error {
 		if i > 0 {
 			p7this.sqlString.WriteByte(',')
 		}
-		switch t4Type := t4value.(type) {
-		case clause.S6Column:
-			err := p7this.F8BuildColumn(t4Type)
-			if nil != err {
-				return err
-			}
-		case clause.S6Aggregate:
-			err := p7this.F8BuildAggregate(t4Type)
-			if nil != err {
-				return err
-			}
-		case clause.S6PartRaw:
-			p7this.sqlString.WriteString(t4Type.SQLString)
-			if 0 > len(t4Type.S5Value) {
-				p7this.F8AddParameter(t4Type.S5Value...)
-			}
+		err := t4value.F8BuildSelectExpr(&p7this.s6QueryBuilder)
+		if nil != err {
+			return err
 		}
+
+		//switch t4Type := t4value.(type) {
+		//case S6Column:
+		//	err := p7this.F8BuildColumn(t4Type)
+		//	if nil != err {
+		//		return err
+		//	}
+		//case S6Aggregate:
+		//	err := p7this.F8BuildAggregate(t4Type)
+		//	if nil != err {
+		//		return err
+		//	}
+		//case S6PartRaw:
+		//	p7this.sqlString.WriteString(t4Type.SQLString)
+		//	if 0 > len(t4Type.S5Value) {
+		//		p7this.F8AddParameter(t4Type.S5Value...)
+		//	}
+		//}
 	}
 	return nil
 }
 
-func NewS6Select[T any](i9session I9Session) *S6Select[T] {
+func F8NewS6Select[T any](i9session I9Session) *S6Select[T] {
+	t4p7s6monitor := i9session.f8GetS6Monitor()
 	return &S6Select[T]{
 		i9session: i9session,
+		s6QueryBuilder: s6QueryBuilder{
+			s6Monitor: t4p7s6monitor,
+			quote:     t4p7s6monitor.i9Dialect.f8GetQuoter(),
+		},
 		tableName: "table_name",
 	}
 }
 
-//// F4Get 执行查询
-//func (p7this *S6Select[T]) F4Get(i9ctx context.Context) (*T, error) {
-//	// 执行查询
-//	rows, err := p7this.p7s6OrmDB.p7s6SqlDB.QueryContext(i9ctx, p7this.s6query.SQLString, p7this.s6query.S5Value...)
-//	if nil != err {
-//		return nil, err
-//	}
-//	// 处理数据库返回的查询结果
-//	if !rows.Next() {
-//		return nil, result.ErrNoRows
-//	}
-//	// new 一个类型 T 的变量
-//	t4p7t := new(T)
-//	// 获取类型 T 对应的 orm 映射模型
-//	t4s6OrmModel, err := p7this.p7s6OrmDB.i9Registry.F8Get(t4p7t)
-//	if nil != err {
-//		return nil, err
-//	}
-//	// 用数据库返回的查询结果构造结构体
-//	t4result := p7this.p7s6OrmDB.f8NewI9Result(t4p7t, t4s6OrmModel)
-//	err = t4result.F8SetField(rows)
-//
-//	return t4p7t, err
-//}
+// F4Get 执行查询
+func (p7this *S6Select[T]) F4Get(i9ctx context.Context) (*T, error) {
+	p7s6query, _ := p7this.F8BuildQuery()
+
+	// 执行查询
+	rows, err := p7this.i9session.f8DoQueryContext(i9ctx, p7s6query.SQLString, p7s6query.S5Value...)
+	if nil != err {
+		return nil, err
+	}
+
+	// 处理数据库返回的查询结果
+	if !rows.Next() {
+		return nil, result.ErrNoRows
+	}
+
+	// new 一个类型 T 的变量
+	t4p7T := new(T)
+	// 获取类型 T 对应的 orm 映射模型
+	t4s6model, err2 := p7this.i9session.f8GetS6Monitor().i9Registry.F8Get(t4p7T)
+	if nil != err2 {
+		return nil, err2
+	}
+	// 用数据库返回的查询结果构造结构体
+	t4result := p7this.i9session.f8GetS6Monitor().f8NewI9Result(t4p7T, t4s6model)
+	err4 := t4result.F8SetField(rows)
+	return t4p7T, err4
+}

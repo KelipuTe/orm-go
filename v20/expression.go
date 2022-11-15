@@ -1,9 +1,9 @@
-package clause
+package v20
 
 // I9Expression 对应表达式（列、聚合函数、查询条件、值）
 // 即 SELECT Statement 里的 expr
 type I9Expression interface {
-	F8Expression()
+	F8BuildExpression(p7s6qb *s6QueryBuilder) error
 }
 
 // F8NewI9Expression 把输入转换成表达式

@@ -1,4 +1,4 @@
-package clause
+package v20
 
 // s6Operator 对应操作符
 type s6Operator string

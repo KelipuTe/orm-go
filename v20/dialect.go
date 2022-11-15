@@ -1,7 +1,5 @@
 package v20
 
-import "orm-go/v20/clause"
-
 var S6MySQLDialect Dialect = &s6MySQLDialect{}
 
 type Dialect interface {
@@ -24,13 +22,13 @@ func (p7this *s6MySQLDialect) f8BuildOnConflict(p7s6QueryBuilder *s6QueryBuilder
 			p7s6QueryBuilder.sqlString.WriteByte(',')
 		}
 		switch t4value2 := t4value.(type) {
-		case clause.S6Column:
+		case S6Column:
 			p7s6QueryBuilder.sqlString.WriteByte('`')
 			p7s6QueryBuilder.sqlString.WriteString(t4value2.Name)
 			p7s6QueryBuilder.sqlString.WriteString("`=VALUES(`")
 			p7s6QueryBuilder.sqlString.WriteString(t4value2.Name)
 			p7s6QueryBuilder.sqlString.WriteString("`)")
-		case clause.S6Assignment:
+		case S6Assignment:
 			p7s6QueryBuilder.sqlString.WriteByte('`')
 			p7s6QueryBuilder.sqlString.WriteString(t4value2.Name)
 			p7s6QueryBuilder.sqlString.WriteString("=")

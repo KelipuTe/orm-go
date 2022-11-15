@@ -1,4 +1,4 @@
-package clause
+package v20
 
 // S6Column 对应列
 // 即 SELECT Statement 里的 col_name
@@ -7,9 +7,18 @@ type S6Column struct {
 	Name string
 }
 
-func (this S6Column) F8Expression() {}
+func (this S6Column) F8BuildColumn(p7s6qb *s6QueryBuilder) error {
+	p7s6qb.f8WrapWithQuote(this.Name)
+	return nil
+}
 
-func (this S6Column) F8SelectExpr() {}
+func (this S6Column) F8BuildSelectExpr(p7s6qb *s6QueryBuilder) error {
+	return this.F8BuildColumn(p7s6qb)
+}
+
+func (this S6Column) F8BuildExpression(p7s6qb *s6QueryBuilder) error {
+	return this.F8BuildColumn(p7s6qb)
+}
 
 func (this S6Column) F8Assignment() {}
 

@@ -1,4 +1,4 @@
-package clause
+package v20
 
 // I9Assignment 标记接口，对应 INSERT 和 UPDATE 的赋值语句
 // 即 INSERT Statement 和 UPDATE Statement 里的 assignment

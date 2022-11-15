@@ -1,4 +1,4 @@
-package clause
+package v20
 
 // S6PartRaw 对应一段原生 SQL
 type S6PartRaw struct {
@@ -8,9 +8,21 @@ type S6PartRaw struct {
 	S5Value []any
 }
 
-func (this S6PartRaw) F8SelectExpr() {}
+func (this S6PartRaw) F8PartRaw(p7s6qb *s6QueryBuilder) error {
+	p7s6qb.sqlString.WriteString(this.SQLString)
+	if 0 < len(this.S5Value) {
+		p7s6qb.F8AddParameter(this.S5Value...)
+	}
+	return nil
+}
 
-func (this S6PartRaw) F8Expression() {}
+func (this S6PartRaw) F8BuildSelectExpr(p7s6qb *s6QueryBuilder) error {
+	return this.F8PartRaw(p7s6qb)
+}
+
+func (this S6PartRaw) F8BuildExpression(p7s6qb *s6QueryBuilder) error {
+	return this.F8PartRaw(p7s6qb)
+}
 
 func (this S6PartRaw) ToPredicate() S6WhereCondition {
 	return S6WhereCondition{

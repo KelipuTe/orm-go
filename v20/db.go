@@ -20,12 +20,12 @@ func (p7this *S6DB) f8GetS6Monitor() s6Monitor {
 	return p7this.s6Monitor
 }
 
-func (p7this *S6DB) f8DoQueryContext(ctx context.Context, query string, args []any) (*sql.Rows, error) {
-	return p7this.p7s6SqlDB.QueryContext(ctx, query, args)
+func (p7this *S6DB) f8DoQueryContext(ctx context.Context, query string, args ...any) (*sql.Rows, error) {
+	return p7this.p7s6SqlDB.QueryContext(ctx, query, args...)
 }
 
-func (p7this *S6DB) f8DoExecContext(ctx context.Context, query string, args []any) (sql.Result, error) {
-	return p7this.p7s6SqlDB.ExecContext(ctx, query, args)
+func (p7this *S6DB) f8DoExecContext(ctx context.Context, query string, args ...any) (sql.Result, error) {
+	return p7this.p7s6SqlDB.ExecContext(ctx, query, args...)
 }
 
 // F8NewS6DB 构造 S6DB

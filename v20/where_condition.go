@@ -1,4 +1,4 @@
-package clause
+package v20
 
 // S6WhereCondition 对应 where 子句和 having 子句的查询条件
 // 即 SELECT Statement 里的 where_condition
@@ -12,7 +12,49 @@ type S6WhereCondition struct {
 	RightExpr I9Expression
 }
 
-func (this S6WhereCondition) F8Expression() {}
+func (this S6WhereCondition) F8BuildExpression(p7s6qb *s6QueryBuilder) error {
+	var err error
+
+	if nil != this.LeftExpr {
+		_, lIsP := this.LeftExpr.(S6WhereCondition)
+		if lIsP {
+			p7s6qb.sqlString.WriteByte('(')
+		}
+		err = this.LeftExpr.F8BuildExpression(p7s6qb)
+		if nil != err {
+			return err
+		}
+		if lIsP {
+			p7s6qb.sqlString.WriteByte(')')
+		}
+	}
+
+	// 处理中间的操作符
+	// 如果没有操作符，那么就是原生 sql，没有右边的部分
+	if "" == this.Operator.String() {
+		return nil
+	}
+	p7s6qb.sqlString.WriteByte(' ')
+	p7s6qb.sqlString.WriteString(this.Operator.String())
+	p7s6qb.sqlString.WriteByte(' ')
+
+	// 递归处理右边的部分
+	if nil != this.RightExpr {
+		_, rIsP := this.RightExpr.(S6WhereCondition)
+		if rIsP {
+			p7s6qb.sqlString.WriteByte('(')
+		}
+		err = this.RightExpr.F8BuildExpression(p7s6qb)
+		if nil != err {
+			return err
+		}
+		if rIsP {
+			p7s6qb.sqlString.WriteByte(')')
+		}
+	}
+
+	return nil
+}
 
 // And 与，左查询条件 `与` 右查询条件 => (`Id` = 11) AND (S6Column = 'aa')
 func (this S6WhereCondition) And(p S6WhereCondition) S6WhereCondition {
