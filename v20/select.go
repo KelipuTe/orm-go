@@ -136,7 +136,7 @@ func (p7this *S6Select[T]) F8BuildQuery() (*S6Query, error) {
 	if 0 < len(p7this.s5GroupBy) {
 		p7this.sqlString.WriteString(" GROUP BY ")
 		for i, t4value := range p7this.s5GroupBy {
-			if i > 0 {
+			if 0 < i {
 				p7this.sqlString.WriteByte(',')
 			}
 			err = t4value.F8BuildColumn(&p7this.s6QueryBuilder)
@@ -159,7 +159,7 @@ func (p7this *S6Select[T]) F8BuildQuery() (*S6Query, error) {
 	if 0 < len(p7this.s5OrderBy) {
 		p7this.sqlString.WriteString(" ORDER BY ")
 		for i, t4value := range p7this.s5OrderBy {
-			if i > 0 {
+			if 0 < i {
 				p7this.sqlString.WriteByte(',')
 			}
 			err = t4value.F8BuildOrderBy(&p7this.s6QueryBuilder)
@@ -196,7 +196,7 @@ func (p7this *S6Select[T]) f8BuildSelect() error {
 	}
 
 	for i, t4value := range p7this.s5select {
-		if i > 0 {
+		if 0 < i {
 			p7this.sqlString.WriteByte(',')
 		}
 		err := t4value.F8BuildSelectExpr(&p7this.s6QueryBuilder)

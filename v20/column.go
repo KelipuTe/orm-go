@@ -20,7 +20,7 @@ func (this S6Column) F8BuildExpression(p7s6qb *s6QueryBuilder) error {
 	return this.F8BuildColumn(p7s6qb)
 }
 
-func (this S6Column) F8Assignment() {}
+func (this S6Column) F8BuildAssignment() error { return nil }
 
 func (this S6Column) F8EQ(p any) S6WhereCondition {
 	return S6WhereCondition{

@@ -11,5 +11,5 @@ type s6Monitor struct {
 	// f8NewI9Result 处理"用数据库返回的查询结果构造结构体"
 	f8NewI9Result result.F8NewI9Result
 	// 处理方言
-	i9Dialect Dialect
+	i9Dialect I9Dialect
 }
