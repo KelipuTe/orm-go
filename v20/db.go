@@ -34,6 +34,14 @@ func (p7this *S6DB) f8DoExecContext(ctx context.Context, query string, args ...a
 	return p7this.p7s6SqlDB.ExecContext(ctx, query, args...)
 }
 
+func (p7this *S6DB) F8BeginTx(ctx context.Context, opts *sql.TxOptions) (*S6Tx, error) {
+	p7s6Tx, err := p7this.p7s6SqlDB.BeginTx(ctx, opts)
+	if err != nil {
+		return nil, err
+	}
+	return &S6Tx{p7s6SqlTx: p7s6Tx, p7s6DB: p7this}, nil
+}
+
 // F8NewS6DB 构造 S6DB
 func F8NewS6DB(p7s6SqlDB *sql.DB, s5Option ...F8S6DBOption) *S6DB {
 	p7s6DB := &S6DB{

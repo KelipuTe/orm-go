@@ -9,8 +9,8 @@ import (
 type S6Select[T any] struct {
 	// s5select 查询子句，对应 select_expr
 	s5select []I9SelectExpr
-	// tableName 表名
-	tableName string
+	// i9TableReference 表名
+	i9TableReference I9TableReference
 	// s5where WHERE 子句
 	s5where []S6WhereCondition
 	// s5GroupBy GROUP BY 子句
@@ -105,8 +105,18 @@ func (p7this *S6Select[T]) F8Offset(rowCount int) *S6Select[T] {
 	return p7this
 }
 
+func (p7this *S6Select[T]) F8From(i9reference I9TableReference) *S6Select[T] {
+	p7this.i9TableReference = i9reference
+	return p7this
+}
+
 func (p7this *S6Select[T]) F8BuildQuery() (*S6Query, error) {
 	var err error
+
+	p7this.s6QueryBuilder.p7s6Model, err = p7this.s6Monitor.i9Registry.F8Get(new(T))
+	if nil != err {
+		return nil, err
+	}
 
 	p7this.sqlString.WriteString("SELECT ")
 
@@ -118,10 +128,11 @@ func (p7this *S6Select[T]) F8BuildQuery() (*S6Query, error) {
 
 	p7this.sqlString.WriteString(" FROM ")
 
-	// 处理表名
-	p7this.sqlString.WriteByte('`')
-	p7this.sqlString.WriteString(p7this.tableName)
-	p7this.sqlString.WriteByte('`')
+	// 处理表
+	err = p7this.f8BuildTableReference(p7this.i9TableReference)
+	if nil != err {
+		return nil, err
+	}
 
 	// 处理 where
 	if 0 < len(p7this.s5where) {
@@ -203,24 +214,6 @@ func (p7this *S6Select[T]) f8BuildSelect() error {
 		if nil != err {
 			return err
 		}
-
-		//switch t4Type := t4value.(type) {
-		//case S6Column:
-		//	err := p7this.F8BuildColumn(t4Type)
-		//	if nil != err {
-		//		return err
-		//	}
-		//case S6Aggregate:
-		//	err := p7this.F8BuildAggregate(t4Type)
-		//	if nil != err {
-		//		return err
-		//	}
-		//case S6PartRaw:
-		//	p7this.sqlString.WriteString(t4Type.SQLString)
-		//	if 0 > len(t4Type.S5Value) {
-		//		p7this.F8AddParameter(t4Type.S5Value...)
-		//	}
-		//}
 	}
 	return nil
 }
@@ -233,7 +226,6 @@ func F8NewS6Select[T any](i9session I9Session) *S6Select[T] {
 			s6Monitor: t4p7s6monitor,
 			quote:     t4p7s6monitor.i9Dialect.f8GetQuoter(),
 		},
-		tableName: "table_name",
 	}
 }
 
@@ -263,4 +255,15 @@ func (p7this *S6Select[T]) F4Get(i9ctx context.Context) (*T, error) {
 	t4result := p7this.i9session.f8GetS6Monitor().f8NewI9Result(t4p7T, t4s6model)
 	err4 := t4result.F8SetField(rows)
 	return t4p7T, err4
+}
+
+func (p7this *S6Select[T]) f8BuildTableReference(reference I9TableReference) error {
+	if nil == reference {
+		p7this.f8WrapWithQuote(p7this.p7s6Model.TableName)
+	}
+	err := reference.F8BuildTableReference(&p7this.s6QueryBuilder)
+	if nil == err {
+		return err
+	}
+	return nil
 }

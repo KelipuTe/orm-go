@@ -1,5 +1,7 @@
 package v20
 
+// #### Part Raw ####
+
 // S6PartRaw 对应一段原生 SQL
 type S6PartRaw struct {
 	// SQLString 带有占位符的 SQL 语句

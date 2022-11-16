@@ -16,8 +16,8 @@ func TestS6InsertF8Build(p7s6t *testing.T) {
 	}{
 		{
 			name: "insert_one",
-			queryBuilder: F8NewS6Insert[S6TestModel](p7s6DB).
-				F8SetValue(&S6TestModel{Id: 11, Name: "aa", Age: 22, Sex: 1}),
+			queryBuilder: F8NewS6Insert[S6APPUserModel](p7s6DB).
+				F8SetValue(&S6APPUserModel{Id: 11, Name: "aa", Age: 22, Sex: 1}),
 			wantQuery: &S6Query{
 				SQLString: "INSERT INTO `test_model`(`id`,`name`,`age`,`sex`) VALUES(?,?,?,?);",
 				S5Value:   []any{11, "aa", int8(22), int8(1)},
@@ -26,10 +26,10 @@ func TestS6InsertF8Build(p7s6t *testing.T) {
 		},
 		{
 			name: "insert_two",
-			queryBuilder: F8NewS6Insert[S6TestModel](p7s6DB).
+			queryBuilder: F8NewS6Insert[S6APPUserModel](p7s6DB).
 				F8SetValue(
-					&S6TestModel{Id: 11, Name: "aa", Age: 22, Sex: 1},
-					&S6TestModel{Id: 22, Name: "bb", Age: 33, Sex: 2},
+					&S6APPUserModel{Id: 11, Name: "aa", Age: 22, Sex: 1},
+					&S6APPUserModel{Id: 22, Name: "bb", Age: 33, Sex: 2},
 				),
 			wantQuery: &S6Query{
 				SQLString: "INSERT INTO `test_model`(`id`,`name`,`age`,`sex`) VALUES(?,?,?,?),(?,?,?,?);",
@@ -39,8 +39,8 @@ func TestS6InsertF8Build(p7s6t *testing.T) {
 		},
 		{
 			name: "insert_one_set_column",
-			queryBuilder: F8NewS6Insert[S6TestModel](p7s6DB).
-				F8SetValue(&S6TestModel{Id: 11, Name: "aa", Age: 22, Sex: 1}).
+			queryBuilder: F8NewS6Insert[S6APPUserModel](p7s6DB).
+				F8SetValue(&S6APPUserModel{Id: 11, Name: "aa", Age: 22, Sex: 1}).
 				F8SetColumn("Id", "Name"),
 			wantQuery: &S6Query{
 				SQLString: "INSERT INTO `test_model`(`id`,`name`) VALUES(?,?);",
@@ -50,8 +50,8 @@ func TestS6InsertF8Build(p7s6t *testing.T) {
 		},
 		{
 			name: "insert_one_on_conflict_update_with_column",
-			queryBuilder: F8NewS6Insert[S6TestModel](p7s6DB).
-				F8SetValue(&S6TestModel{Id: 11, Name: "aa", Age: 22, Sex: 1}).
+			queryBuilder: F8NewS6Insert[S6APPUserModel](p7s6DB).
+				F8SetValue(&S6APPUserModel{Id: 11, Name: "aa", Age: 22, Sex: 1}).
 				f8OnConflictBuilder().
 				F8Update(S6Column{Name: "id"}, S6Column{Name: "name"}),
 			wantQuery: &S6Query{
@@ -63,8 +63,8 @@ func TestS6InsertF8Build(p7s6t *testing.T) {
 		},
 		{
 			name: "insert_one_on_conflict_update_with_value",
-			queryBuilder: F8NewS6Insert[S6TestModel](p7s6DB).
-				F8SetValue(&S6TestModel{Id: 11, Name: "aa", Age: 22, Sex: 1}).
+			queryBuilder: F8NewS6Insert[S6APPUserModel](p7s6DB).
+				F8SetValue(&S6APPUserModel{Id: 11, Name: "aa", Age: 22, Sex: 1}).
 				f8OnConflictBuilder().
 				F8Update(NewS6Assignment("name", "bb")),
 			wantQuery: &S6Query{
@@ -99,8 +99,8 @@ func TestS6InsertF8BuildSQLite3(p7s6t *testing.T) {
 	}{
 		{
 			name: "insert_one_on_conflict_update_with_column",
-			queryBuilder: F8NewS6Insert[S6TestModel](p7s6DB).
-				F8SetValue(&S6TestModel{Id: 11, Name: "aa", Age: 22, Sex: 1}).
+			queryBuilder: F8NewS6Insert[S6APPUserModel](p7s6DB).
+				F8SetValue(&S6APPUserModel{Id: 11, Name: "aa", Age: 22, Sex: 1}).
 				f8OnConflictBuilder().
 				F8ConflictColumn(F8NewS6Column("id")).
 				F8Update(S6Column{Name: "name"}, S6Column{Name: "age"}),
@@ -113,8 +113,8 @@ func TestS6InsertF8BuildSQLite3(p7s6t *testing.T) {
 		},
 		{
 			name: "insert_one_on_conflict_update_with_value",
-			queryBuilder: F8NewS6Insert[S6TestModel](p7s6DB).
-				F8SetValue(&S6TestModel{Id: 11, Name: "aa", Age: 22, Sex: 1}).
+			queryBuilder: F8NewS6Insert[S6APPUserModel](p7s6DB).
+				F8SetValue(&S6APPUserModel{Id: 11, Name: "aa", Age: 22, Sex: 1}).
 				f8OnConflictBuilder().
 				F8ConflictColumn(F8NewS6Column("id")).
 				F8Update(NewS6Assignment("name", "bb")),

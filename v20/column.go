@@ -4,11 +4,20 @@ package v20
 // 即 SELECT Statement 里的 col_name
 type S6Column struct {
 	// 列名
-	Name string
+	i9TableReference I9TableReference
+	Name             string
+	Alias            string
 }
 
-func (this S6Column) F8BuildColumn(p7s6qb *s6QueryBuilder) error {
-	p7s6qb.f8WrapWithQuote(this.Name)
+func (this S6Column) F8BuildColumn(p7s6Builder *s6QueryBuilder) error {
+	if nil != this.i9TableReference {
+		alies := this.i9TableReference.F8GetTableAlies()
+		if "" != alies {
+			p7s6Builder.f8WrapWithQuote(alies)
+			p7s6Builder.sqlString.WriteByte('.')
+		}
+	}
+	p7s6Builder.f8WrapWithQuote(this.Name)
 	return nil
 }
 

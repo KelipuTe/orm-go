@@ -1,12 +1,30 @@
 package v20
 
-type S6TestModel struct {
+type S6APPUserModel struct {
 	Id   int
 	Name string
 	Age  int8
 	Sex  int8
 }
 
-func (p7this S6TestModel) F8TableName() string {
-	return "test_model"
+func (p7this S6APPUserModel) F8TableName() string {
+	return "app_user"
+}
+
+type S6APPUserInfoModel struct {
+	UserId int
+	Info   string
+}
+
+func (p7this S6APPUserInfoModel) F8TableName() string {
+	return "app_user_info"
+}
+
+type S6APPUserOrder struct {
+	UserId  int
+	OrderId int
+}
+
+func (p7this S6APPUserOrder) F8TableName() string {
+	return "app_user_order"
 }
