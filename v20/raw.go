@@ -18,7 +18,7 @@ func (this S6PartRaw) F8PartRaw(p7s6qb *s6QueryBuilder) error {
 	return nil
 }
 
-func (this S6PartRaw) F8BuildSelectExpr(p7s6qb *s6QueryBuilder) error {
+func (this S6PartRaw) f8BuildSelectExpr(p7s6qb *s6QueryBuilder) error {
 	return this.F8PartRaw(p7s6qb)
 }
 

@@ -59,7 +59,7 @@ func (p7this *s6SQLite3Dialect) f8BuildOnConflict(p7s6QueryBuilder *s6QueryBuild
 			if 0 < i {
 				p7s6QueryBuilder.sqlString.WriteByte(',')
 			}
-			err := t4value.F8BuildColumn(p7s6QueryBuilder)
+			err := t4value.f8BuildColumn(p7s6QueryBuilder)
 			if nil != err {
 				return err
 			}

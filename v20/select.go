@@ -5,12 +5,12 @@ import (
 	"orm-go/v20/result"
 )
 
-// S6Select 用于构造 F8Select 语句
+// S6Select 用于构造 SELECT 语句
 type S6Select[T any] struct {
 	// s5select 查询子句，对应 select_expr
-	s5select []I9SelectExpr
-	// i9TableReference 表名
-	i9TableReference I9TableReference
+	s5select []i9SelectExpr
+	// i9from 表名
+	i9from I9TableReference
 	// s5where WHERE 子句
 	s5where []S6WhereCondition
 	// s5GroupBy GROUP BY 子句
@@ -29,7 +29,7 @@ type S6Select[T any] struct {
 }
 
 // F8Select 添加查询子句
-func (p7this *S6Select[T]) F8Select(s5expr ...I9SelectExpr) *S6Select[T] {
+func (p7this *S6Select[T]) F8Select(s5expr ...i9SelectExpr) *S6Select[T] {
 	if 0 >= len(s5expr) {
 		return p7this
 	}
@@ -106,7 +106,7 @@ func (p7this *S6Select[T]) F8Offset(rowCount int) *S6Select[T] {
 }
 
 func (p7this *S6Select[T]) F8From(i9reference I9TableReference) *S6Select[T] {
-	p7this.i9TableReference = i9reference
+	p7this.i9from = i9reference
 	return p7this
 }
 
@@ -129,7 +129,7 @@ func (p7this *S6Select[T]) F8BuildQuery() (*S6Query, error) {
 	p7this.sqlString.WriteString(" FROM ")
 
 	// 处理表
-	err = p7this.f8BuildTableReference(p7this.i9TableReference)
+	err = p7this.f8BuildTableReference(p7this.i9from)
 	if nil != err {
 		return nil, err
 	}
@@ -150,7 +150,7 @@ func (p7this *S6Select[T]) F8BuildQuery() (*S6Query, error) {
 			if 0 < i {
 				p7this.sqlString.WriteByte(',')
 			}
-			err = t4value.F8BuildColumn(&p7this.s6QueryBuilder)
+			err = t4value.f8BuildColumn(&p7this.s6QueryBuilder)
 			if nil != err {
 				return nil, err
 			}
@@ -210,7 +210,7 @@ func (p7this *S6Select[T]) f8BuildSelect() error {
 		if 0 < i {
 			p7this.sqlString.WriteByte(',')
 		}
-		err := t4value.F8BuildSelectExpr(&p7this.s6QueryBuilder)
+		err := t4value.f8BuildSelectExpr(&p7this.s6QueryBuilder)
 		if nil != err {
 			return err
 		}
@@ -260,10 +260,21 @@ func (p7this *S6Select[T]) F4Get(i9ctx context.Context) (*T, error) {
 func (p7this *S6Select[T]) f8BuildTableReference(reference I9TableReference) error {
 	if nil == reference {
 		p7this.f8WrapWithQuote(p7this.p7s6Model.TableName)
+		return nil
 	}
-	err := reference.F8BuildTableReference(&p7this.s6QueryBuilder)
-	if nil == err {
-		return err
+	return reference.F8BuildTableReference(&p7this.s6QueryBuilder)
+}
+
+func (p7this *S6Select[T]) F8AsSubQuery(alias string) S6SubQuery {
+	t4i9from := p7this.i9from
+	if nil == t4i9from {
+		t4i9from = F8NewS6Table(new(T))
 	}
-	return nil
+
+	return S6SubQuery{
+		s5Select:  p7this.s5select,
+		i9From:    t4i9from,
+		alias:     alias,
+		i9Builder: p7this,
+	}
 }

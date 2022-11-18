@@ -2,26 +2,26 @@ package v20
 
 // S6Aggregate 对应聚合函数
 type S6Aggregate struct {
-	// S6Column 聚合函数的函数名
+	// Name 聚合函数的函数名
 	Name string
 	// S6Column 聚合函数操作的列
 	S6Column S6Column
 }
 
-func (this S6Aggregate) F8BuildAggregate(p7s6qb *s6QueryBuilder) error {
-	p7s6qb.sqlString.WriteString(this.Name)
-	p7s6qb.sqlString.WriteString("(`")
-	p7s6qb.sqlString.WriteString(this.S6Column.Name)
-	p7s6qb.sqlString.WriteString("`)")
+func (this S6Aggregate) f8BuildAggregate(p7s6Builder *s6QueryBuilder) error {
+	p7s6Builder.sqlString.WriteString(this.Name)
+	p7s6Builder.sqlString.WriteByte('(')
+	p7s6Builder.f8WrapWithQuote(this.S6Column.Name)
+	p7s6Builder.sqlString.WriteByte(')')
 	return nil
 }
 
-func (this S6Aggregate) F8BuildSelectExpr(p7s6qb *s6QueryBuilder) error {
-	return this.F8BuildAggregate(p7s6qb)
+func (this S6Aggregate) f8BuildSelectExpr(p7s6Builder *s6QueryBuilder) error {
+	return this.f8BuildAggregate(p7s6Builder)
 }
 
-func (this S6Aggregate) F8BuildExpression(p7s6qb *s6QueryBuilder) error {
-	return this.F8BuildAggregate(p7s6qb)
+func (this S6Aggregate) F8BuildExpression(p7s6Builder *s6QueryBuilder) error {
+	return this.f8BuildAggregate(p7s6Builder)
 }
 
 func (this S6Aggregate) Equal(input any) S6WhereCondition {

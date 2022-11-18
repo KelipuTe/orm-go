@@ -16,8 +16,8 @@ func (this S6Table) F8As(name string) S6Table {
 
 func (this S6Table) F8Column(name string) S6Column {
 	return S6Column{
-		i9TableReference: this,
-		Name:             name,
+		i9From: this,
+		Name:   name,
 	}
 }
 

@@ -14,4 +14,5 @@ const (
 	c5OperatorAND         s6Operator = "AND"
 	c5OperatorOR          s6Operator = "OR"
 	c5OperatorNOT         s6Operator = "NOT"
+	c5OperatorIn          s6Operator = "IN"
 )

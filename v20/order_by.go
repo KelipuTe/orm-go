@@ -10,7 +10,7 @@ type S6OrderBy struct {
 }
 
 func (this S6OrderBy) F8BuildOrderBy(p7s6qb *s6QueryBuilder) error {
-	err := this.S6Column.F8BuildColumn(p7s6qb)
+	err := this.S6Column.f8BuildColumn(p7s6qb)
 	if nil != err {
 		return err
 	}

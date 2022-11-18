@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestS6SelectBuildQuery(p7s6t *testing.T) {
+func TestSelectBuildQuery(p7s6t *testing.T) {
 	p7s6DB := F8NewS6DB(nil)
 
 	s5case := []struct {
@@ -37,7 +37,7 @@ func TestS6SelectBuildQuery(p7s6t *testing.T) {
 	}
 }
 
-func TestS6SelectOperator(p7s6t *testing.T) {
+func TestSelectOperator(p7s6t *testing.T) {
 	p7s6DB := F8NewS6DB(nil)
 
 	s5case := []struct {
@@ -49,7 +49,7 @@ func TestS6SelectOperator(p7s6t *testing.T) {
 		{
 			name: "where_equal",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
-				F8Where(F8NewS6Column("Id").F8EQ(11)),
+				F8Where(F8NewS6Column("Id").F8Equal(11)),
 			wantQuery: &S6Query{
 				SQLString: "SELECT * FROM `app_user` WHERE `Id` = ?;",
 				S5Value:   []any{11},
@@ -58,7 +58,7 @@ func TestS6SelectOperator(p7s6t *testing.T) {
 		{
 			name: "where_greater_than",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
-				F8Where(F8NewS6Column("Id").F8GT(11)),
+				F8Where(F8NewS6Column("Id").F8GreaterThan(11)),
 			wantQuery: &S6Query{
 				SQLString: "SELECT * FROM `app_user` WHERE `Id` > ?;",
 				S5Value:   []any{11},
@@ -67,7 +67,7 @@ func TestS6SelectOperator(p7s6t *testing.T) {
 		{
 			name: "where_less_than",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
-				F8Where(F8NewS6Column("Id").F8LT(11)),
+				F8Where(F8NewS6Column("Id").F8LessThan(11)),
 			wantQuery: &S6Query{
 				SQLString: "SELECT * FROM `app_user` WHERE `Id` < ?;",
 				S5Value:   []any{11},
@@ -87,7 +87,7 @@ func TestS6SelectOperator(p7s6t *testing.T) {
 	}
 }
 
-func TestS6SelectWhere(p7s6t *testing.T) {
+func TestSelectWhere(p7s6t *testing.T) {
 	p7s6DB := F8NewS6DB(nil)
 
 	s5case := []struct {
@@ -108,7 +108,7 @@ func TestS6SelectWhere(p7s6t *testing.T) {
 		{
 			name: "where_one",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
-				F8Where(F8NewS6Column("Id").F8EQ(11)),
+				F8Where(F8NewS6Column("Id").F8Equal(11)),
 			wantQuery: &S6Query{
 				SQLString: "SELECT * FROM `app_user` WHERE `Id` = ?;",
 				S5Value:   []any{11},
@@ -117,8 +117,8 @@ func TestS6SelectWhere(p7s6t *testing.T) {
 		{
 			name: "where_two",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
-				F8Where(F8NewS6Column("Id").F8EQ(11)).
-				F8Where(F8NewS6Column("S6Column").F8EQ("aa")),
+				F8Where(F8NewS6Column("Id").F8Equal(11)).
+				F8Where(F8NewS6Column("S6Column").F8Equal("aa")),
 			wantQuery: &S6Query{
 				SQLString: "SELECT * FROM `app_user` WHERE (`Id` = ?) AND (`S6Column` = ?);",
 				S5Value:   []any{11, "aa"},
@@ -127,7 +127,7 @@ func TestS6SelectWhere(p7s6t *testing.T) {
 		{
 			name: "where_one_and_one",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
-				F8Where(F8NewS6Column("Id").F8EQ(11).And(F8NewS6Column("S6Column").F8EQ("aa"))),
+				F8Where(F8NewS6Column("Id").F8Equal(11).And(F8NewS6Column("S6Column").F8Equal("aa"))),
 			wantQuery: &S6Query{
 				SQLString: "SELECT * FROM `app_user` WHERE (`Id` = ?) AND (`S6Column` = ?);",
 				S5Value:   []any{11, "aa"},
@@ -136,7 +136,7 @@ func TestS6SelectWhere(p7s6t *testing.T) {
 		{
 			name: "where_one_or_one",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
-				F8Where(F8NewS6Column("Id").F8EQ(11).Or(F8NewS6Column("S6Column").F8EQ("aa"))),
+				F8Where(F8NewS6Column("Id").F8Equal(11).Or(F8NewS6Column("S6Column").F8Equal("aa"))),
 			wantQuery: &S6Query{
 				SQLString: "SELECT * FROM `app_user` WHERE (`Id` = ?) OR (`S6Column` = ?);",
 				S5Value:   []any{11, "aa"},
@@ -145,7 +145,7 @@ func TestS6SelectWhere(p7s6t *testing.T) {
 		{
 			name: "where_not_one",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
-				F8Where(Not(F8NewS6Column("Id").F8EQ(11))),
+				F8Where(Not(F8NewS6Column("Id").F8Equal(11))),
 			wantQuery: &S6Query{
 				SQLString: "SELECT * FROM `app_user` WHERE  NOT (`Id` = ?);",
 				S5Value:   []any{11},
@@ -154,7 +154,7 @@ func TestS6SelectWhere(p7s6t *testing.T) {
 		{
 			name: "where_one_and_(one_and_one)",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
-				F8Where(F8NewS6Column("Id").F8EQ(11).And(F8NewS6Column("S6Column").F8EQ("aa").And(F8NewS6Column("Age").F8EQ(22)))),
+				F8Where(F8NewS6Column("Id").F8Equal(11).And(F8NewS6Column("S6Column").F8Equal("aa").And(F8NewS6Column("Age").F8Equal(22)))),
 			wantQuery: &S6Query{
 				SQLString: "SELECT * FROM `app_user` WHERE (`Id` = ?) AND ((`S6Column` = ?) AND (`Age` = ?));",
 				S5Value:   []any{11, "aa", 22},
@@ -163,7 +163,7 @@ func TestS6SelectWhere(p7s6t *testing.T) {
 		{
 			name: "where_one_or_(one_or_one)",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
-				F8Where(F8NewS6Column("Id").F8EQ(11).And(F8NewS6Column("S6Column").F8EQ("aa").Or(F8NewS6Column("Age").F8EQ(22)))),
+				F8Where(F8NewS6Column("Id").F8Equal(11).And(F8NewS6Column("S6Column").F8Equal("aa").Or(F8NewS6Column("Age").F8Equal(22)))),
 			wantQuery: &S6Query{
 				SQLString: "SELECT * FROM `app_user` WHERE (`Id` = ?) AND ((`S6Column` = ?) OR (`Age` = ?));",
 				S5Value:   []any{11, "aa", 22},
@@ -172,7 +172,7 @@ func TestS6SelectWhere(p7s6t *testing.T) {
 		{
 			name: "where_one_and_(not_one)",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
-				F8Where(F8NewS6Column("Id").F8EQ(11).And(Not(F8NewS6Column("S6Column").F8EQ("aa")))),
+				F8Where(F8NewS6Column("Id").F8Equal(11).And(Not(F8NewS6Column("S6Column").F8Equal("aa")))),
 			wantQuery: &S6Query{
 				SQLString: "SELECT * FROM `app_user` WHERE (`Id` = ?) AND ( NOT (`S6Column` = ?));",
 				S5Value:   []any{11, "aa"},
@@ -192,7 +192,7 @@ func TestS6SelectWhere(p7s6t *testing.T) {
 	}
 }
 
-func TestS6SelectGroupBy(p7s6t *testing.T) {
+func TestSelectGroupBy(p7s6t *testing.T) {
 	p7s6DB := F8NewS6DB(nil)
 
 	s5case := []struct {
@@ -242,7 +242,7 @@ func TestS6SelectGroupBy(p7s6t *testing.T) {
 	}
 }
 
-func TestS6SelectHaving(p7s6t *testing.T) {
+func TestSelectHaving(p7s6t *testing.T) {
 	p7s6DB := F8NewS6DB(nil)
 
 	s5case := []struct {
@@ -263,7 +263,7 @@ func TestS6SelectHaving(p7s6t *testing.T) {
 		{
 			name: "having_no_group_by",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
-				F8Having(F8NewS6Column("Age").F8GT(22)),
+				F8Having(F8NewS6Column("Age").F8GreaterThan(22)),
 			wantQuery: &S6Query{
 				SQLString: "SELECT * FROM `app_user`;",
 				S5Value:   nil,
@@ -273,7 +273,7 @@ func TestS6SelectHaving(p7s6t *testing.T) {
 			name: "having_one",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
 				F8GroupBy(F8NewS6Column("Age")).
-				F8Having(F8NewS6Column("Id").F8EQ(11)),
+				F8Having(F8NewS6Column("Id").F8Equal(11)),
 			wantQuery: &S6Query{
 				SQLString: "SELECT * FROM `app_user` GROUP BY `Age` HAVING `Id` = ?;",
 				S5Value:   []any{11},
@@ -283,7 +283,7 @@ func TestS6SelectHaving(p7s6t *testing.T) {
 			name: "group_by_two_having_one",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
 				F8GroupBy(F8NewS6Column("Age")).F8GroupBy(F8NewS6Column("Sex")).
-				F8Having(F8NewS6Column("Id").F8EQ(11)),
+				F8Having(F8NewS6Column("Id").F8Equal(11)),
 			wantQuery: &S6Query{
 				SQLString: "SELECT * FROM `app_user` GROUP BY `Age`,`Sex` HAVING `Id` = ?;",
 				S5Value:   []any{11},
@@ -293,7 +293,7 @@ func TestS6SelectHaving(p7s6t *testing.T) {
 			name: "group_by_two_having_two",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
 				F8GroupBy(F8NewS6Column("Age")).F8GroupBy(F8NewS6Column("Sex")).
-				F8Having(F8NewS6Column("Id").F8EQ(11)).F8Having(F8NewS6Column("S6Column").F8EQ("aa")),
+				F8Having(F8NewS6Column("Id").F8Equal(11)).F8Having(F8NewS6Column("S6Column").F8Equal("aa")),
 			wantQuery: &S6Query{
 				SQLString: "SELECT * FROM `app_user` GROUP BY `Age`,`Sex` HAVING (`Id` = ?) AND (`S6Column` = ?);",
 				S5Value:   []any{11, "aa"},
@@ -313,7 +313,7 @@ func TestS6SelectHaving(p7s6t *testing.T) {
 	}
 }
 
-func TestS6SelectOrderBy(p7s6t *testing.T) {
+func TestSelectOrderBy(p7s6t *testing.T) {
 	p7s6DB := F8NewS6DB(nil)
 
 	s5case := []struct {
@@ -371,7 +371,7 @@ func TestS6SelectOrderBy(p7s6t *testing.T) {
 	}
 }
 
-func TestS6SelectOffsetLimit(p7s6t *testing.T) {
+func TestSelectOffsetLimit(p7s6t *testing.T) {
 	p7s6DB := F8NewS6DB(nil)
 
 	s5case := []struct {
@@ -421,7 +421,7 @@ func TestS6SelectOffsetLimit(p7s6t *testing.T) {
 	}
 }
 
-func TestS6SelectSelect(p7s6t *testing.T) {
+func TestSelectSelect(p7s6t *testing.T) {
 	p7s6DB := F8NewS6DB(nil)
 
 	s5case := []struct {
@@ -462,7 +462,7 @@ func TestS6SelectSelect(p7s6t *testing.T) {
 	}
 }
 
-func TestS6SelectAggregate(p7s6t *testing.T) {
+func TestSelectAggregate(p7s6t *testing.T) {
 	p7s6DB := F8NewS6DB(nil)
 
 	s5case := []struct {
@@ -513,7 +513,7 @@ func TestS6SelectAggregate(p7s6t *testing.T) {
 	}
 }
 
-func TestS6SelectJoin(p7s6t *testing.T) {
+func TestSelectJoin(p7s6t *testing.T) {
 	p7s6DB := F8NewS6DB(nil)
 
 	s5case := []struct {
@@ -528,7 +528,7 @@ func TestS6SelectJoin(p7s6t *testing.T) {
 				t1 := F8NewS6Table(&S6APPUserModel{}).F8As("t1")
 				t2 := F8NewS6Table(&S6APPUserInfoModel{})
 				return F8NewS6Select[S6APPUserModel](p7s6DB).
-					F8From(t1.F8Join(t2).F8On(t1.F8Column("id").F8EQ(t2.F8Column("user_id"))))
+					F8From(t1.F8Join(t2).F8On(t1.F8Column("id").F8Equal(t2.F8Column("user_id"))))
 			}(),
 			wantQuery: &S6Query{
 				SQLString: "SELECT * FROM (`app_user` AS `t1` JOIN `app_user_info` ON `t1`.`id` = `user_id`);",
@@ -542,8 +542,8 @@ func TestS6SelectJoin(p7s6t *testing.T) {
 				t2 := F8NewS6Table(&S6APPUserInfoModel{}).F8As("t2")
 				t3 := F8NewS6Table(&S6APPUserOrder{}).F8As("t3")
 				return F8NewS6Select[S6APPUserModel](p7s6DB).
-					F8From(t1.F8Join(t2).F8On(t1.F8Column("id").F8EQ(t2.F8Column("user_id"))).
-						F8Join(t3).F8On(t1.F8Column("id").F8EQ(t3.F8Column("user_id"))))
+					F8From(t1.F8Join(t2).F8On(t1.F8Column("id").F8Equal(t2.F8Column("user_id"))).
+						F8Join(t3).F8On(t1.F8Column("id").F8Equal(t3.F8Column("user_id"))))
 			}(),
 			wantQuery: &S6Query{
 				SQLString: "SELECT * FROM ((`app_user` AS `t1` JOIN `app_user_info` AS `t2` ON `t1`.`id` = `t2`.`user_id`) " +
@@ -557,7 +557,7 @@ func TestS6SelectJoin(p7s6t *testing.T) {
 				t1 := F8NewS6Table(&S6APPUserModel{}).F8As("t1")
 				t2 := F8NewS6Table(&S6APPUserInfoModel{})
 				return F8NewS6Select[S6APPUserModel](p7s6DB).
-					F8From(t1.F8LeftJoin(t2).F8On(t1.F8Column("id").F8EQ(t2.F8Column("user_id"))))
+					F8From(t1.F8LeftJoin(t2).F8On(t1.F8Column("id").F8Equal(t2.F8Column("user_id"))))
 			}(),
 			wantQuery: &S6Query{
 				SQLString: "SELECT * FROM (`app_user` AS `t1` LEFT JOIN `app_user_info` ON `t1`.`id` = `user_id`);",
@@ -571,8 +571,8 @@ func TestS6SelectJoin(p7s6t *testing.T) {
 				t2 := F8NewS6Table(&S6APPUserInfoModel{}).F8As("t2")
 				t3 := F8NewS6Table(&S6APPUserOrder{}).F8As("t3")
 				return F8NewS6Select[S6APPUserModel](p7s6DB).
-					F8From(t1.F8LeftJoin(t2).F8On(t1.F8Column("id").F8EQ(t2.F8Column("user_id"))).
-						F8Join(t3).F8On(t1.F8Column("id").F8EQ(t3.F8Column("user_id"))))
+					F8From(t1.F8LeftJoin(t2).F8On(t1.F8Column("id").F8Equal(t2.F8Column("user_id"))).
+						F8Join(t3).F8On(t1.F8Column("id").F8Equal(t3.F8Column("user_id"))))
 			}(),
 			wantQuery: &S6Query{
 				SQLString: "SELECT * FROM ((`app_user` AS `t1` LEFT JOIN `app_user_info` AS `t2` ON `t1`.`id` = `t2`.`user_id`) " +
@@ -594,7 +594,56 @@ func TestS6SelectJoin(p7s6t *testing.T) {
 	}
 }
 
-func TestS6SelectPartRaw(p7s6t *testing.T) {
+func TestSelectSubQuery(p7s6t *testing.T) {
+	p7s6DB := F8NewS6DB(nil)
+
+	s5case := []struct {
+		name         string
+		queryBuilder I9QueryBuilder
+		wantQuery    *S6Query
+		wantErr      error
+	}{
+		{
+			name: "a_from_b",
+			queryBuilder: func() I9QueryBuilder {
+				sub := F8NewS6Select[S6APPUserInfoModel](p7s6DB).
+					F8AsSubQuery("sub")
+				return F8NewS6Select[S6APPUserModel](p7s6DB).
+					F8From(sub)
+			}(),
+			wantQuery: &S6Query{
+				SQLString: "SELECT * FROM (SELECT * FROM `app_user_info`) AS `sub`;",
+				S5Value:   nil,
+			},
+		},
+		{
+			name: "a_in_b",
+			queryBuilder: func() I9QueryBuilder {
+				sub := F8NewS6Select[S6APPUserInfoModel](p7s6DB).
+					F8AsSubQuery("sub")
+				return F8NewS6Select[S6APPUserModel](p7s6DB).
+					F8Where(F8NewS6Column("id").F8InQuery(sub))
+			}(),
+			wantQuery: &S6Query{
+				SQLString: "SELECT * FROM `app_user` WHERE `id` IN (SELECT * FROM `app_user_info`);",
+				S5Value:   nil,
+			},
+		},
+	}
+
+	for _, t4value := range s5case {
+		p7s6t.Run(t4value.name, func(p7s6t2 *testing.T) {
+			p7query, err := t4value.queryBuilder.F8BuildQuery()
+			assert.Equal(p7s6t2, t4value.wantErr, err)
+			if err != nil {
+				return
+			}
+			assert.Equal(p7s6t2, t4value.wantQuery, p7query)
+		})
+	}
+}
+
+func TestSelectPartRaw(p7s6t *testing.T) {
 	p7s6DB := F8NewS6DB(nil)
 
 	s5case := []struct {
@@ -624,7 +673,7 @@ func TestS6SelectPartRaw(p7s6t *testing.T) {
 		{
 			name: "where_part_raw_and_one",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
-				F8Where(NewS6PartRaw("Id > ?", 11).ToPredicate().And(F8NewS6Column("S6Column").F8EQ("aa"))),
+				F8Where(NewS6PartRaw("Id > ?", 11).ToPredicate().And(F8NewS6Column("S6Column").F8Equal("aa"))),
 			wantQuery: &S6Query{
 				SQLString: "SELECT * FROM `app_user` WHERE (Id > ?) AND (`S6Column` = ?);",
 				S5Value:   []any{11, "aa"},
@@ -654,7 +703,7 @@ func TestS6SelectPartRaw(p7s6t *testing.T) {
 	}
 }
 
-func TestS6SelectorF8Get(p7s6t *testing.T) {
+func TestSelectorF8Get(p7s6t *testing.T) {
 	// 构造 mock 数据库连接
 	p7s6MockDB, sqlMock, err := sqlmock.New()
 	if nil != err {

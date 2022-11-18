@@ -94,13 +94,13 @@ func (p7this *s6QueryBuilder) F8BuildExpression(expr I9Expression) error {
 	//	}
 	//case S6Column:
 	//	// 处理列名
-	//	err = p7this.F8BuildColumn(t4type)
+	//	err = p7this.f8BuildColumn(t4type)
 	//	if nil != err {
 	//		return err
 	//	}
 	//case S6Aggregate:
 	//	// 处理聚合函数
-	//	err = p7this.F8BuildAggregate(t4type)
+	//	err = p7this.f8BuildAggregate(t4type)
 	//	if nil != err {
 	//		return err
 	//	}
