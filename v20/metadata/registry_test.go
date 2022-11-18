@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-type S6TestModel struct {
+type S6APPUserModel struct {
 	Id   int
 	Name string
 	Age  int8
@@ -17,14 +17,14 @@ func TestI9RegistryF8Get(p7tt *testing.T) {
 	s5s6case := []struct {
 		name    string
 		input   any
-		resWant *S6Model
-		errWant error
+		wantRes *S6Model
+		wantErr error
 	}{
 		{
 			// 指针
 			name:  "pointer",
-			input: &S6TestModel{},
-			resWant: &S6Model{
+			input: &S6APPUserModel{},
+			wantRes: &S6Model{
 				TableName: "s6_test_model",
 				M3StructToField: map[string]*S6ModelField{
 					"Id": {
@@ -33,8 +33,8 @@ func TestI9RegistryF8Get(p7tt *testing.T) {
 						Offset:     0,
 						FieldName:  "id",
 					},
-					"S6Column": {
-						StructName: "S6Column",
+					"s6Column": {
+						StructName: "s6Column",
 						I9Type:     reflect.TypeOf(""),
 						Offset:     8,
 						FieldName:  "name",
@@ -60,7 +60,7 @@ func TestI9RegistryF8Get(p7tt *testing.T) {
 						FieldName:  "id",
 					},
 					"name": {
-						StructName: "S6Column",
+						StructName: "s6Column",
 						I9Type:     reflect.TypeOf(""),
 						Offset:     8,
 						FieldName:  "name",
@@ -86,11 +86,11 @@ func TestI9RegistryF8Get(p7tt *testing.T) {
 	for _, s6case := range s5s6case {
 		p7tt.Run(s6case.name, func(p7tt *testing.T) {
 			model, err := i9registry.F8Get(s6case.input)
-			assert.Equal(p7tt, s6case.errWant, err)
+			assert.Equal(p7tt, s6case.wantErr, err)
 			if err != nil {
 				return
 			}
-			assert.Equal(p7tt, s6case.resWant, model)
+			assert.Equal(p7tt, s6case.wantRes, model)
 		})
 	}
 }

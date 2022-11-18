@@ -8,7 +8,7 @@ type I9Assignment interface {
 
 type S6Assignment struct {
 	Name string
-	Expr I9Expression
+	Expr i9Expression
 }
 
 func (this S6Assignment) F8BuildAssignment() error {
@@ -16,7 +16,7 @@ func (this S6Assignment) F8BuildAssignment() error {
 }
 
 func NewS6Assignment(name string, input any) S6Assignment {
-	expr, ok := input.(I9Expression)
+	expr, ok := input.(i9Expression)
 	if !ok {
 		expr = S6Value{Value: input}
 	}

@@ -41,7 +41,7 @@ func TestS6InsertF8Build(p7s6t *testing.T) {
 			name: "insert_one_set_column",
 			queryBuilder: F8NewS6Insert[S6APPUserModel](p7s6DB).
 				F8SetValue(&S6APPUserModel{Id: 11, Name: "aa", Age: 22, Sex: 1}).
-				F8SetColumn("Id", "Name"),
+				F8SetColumn("Id", "name"),
 			wantQuery: &S6Query{
 				SQLString: "INSERT INTO `app_user`(`id`,`name`) VALUES(?,?);",
 				S5Value:   []any{11, "aa"},
@@ -53,7 +53,7 @@ func TestS6InsertF8Build(p7s6t *testing.T) {
 			queryBuilder: F8NewS6Insert[S6APPUserModel](p7s6DB).
 				F8SetValue(&S6APPUserModel{Id: 11, Name: "aa", Age: 22, Sex: 1}).
 				f8OnConflictBuilder().
-				F8Update(S6Column{Name: "id"}, S6Column{Name: "name"}),
+				F8Update(S6Column{name: "id"}, S6Column{name: "name"}),
 			wantQuery: &S6Query{
 				SQLString: "INSERT INTO `app_user`(`id`,`name`,`age`,`sex`) VALUES(?,?,?,?) " +
 					"ON DUPLICATE KEY UPDATE `id`=VALUES(`id`),`name`=VALUES(`name`);",
@@ -103,7 +103,7 @@ func TestS6InsertF8BuildSQLite3(p7s6t *testing.T) {
 				F8SetValue(&S6APPUserModel{Id: 11, Name: "aa", Age: 22, Sex: 1}).
 				f8OnConflictBuilder().
 				F8ConflictColumn(F8NewS6Column("id")).
-				F8Update(S6Column{Name: "name"}, S6Column{Name: "age"}),
+				F8Update(S6Column{name: "name"}, S6Column{name: "age"}),
 			wantQuery: &S6Query{
 				SQLString: "INSERT INTO `app_user`(`id`,`name`,`age`,`sex`) VALUES(?,?,?,?) " +
 					"ON CONFLICT (`id`) DO UPDATE SET `name`=excluded.`name`,`age`=excluded.`age`;",

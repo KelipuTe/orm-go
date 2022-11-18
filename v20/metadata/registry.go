@@ -7,26 +7,26 @@ import (
 	"unicode"
 )
 
-// F8S6OrmModelOption 方法抽象：Option 设计模式
-type F8S6OrmModelOption func(p7s6om *S6Model) error
+// F8S6ModelOption 方法抽象：Option 设计模式
+type F8S6ModelOption func(p7s6om *S6Model) error
 
 // I9Registry 接口抽象：对元数据注册中心的抽象
 type I9Registry interface {
 	// F8Get 方法抽象：查找元数据
 	F8Get(p7s6Model any) (*S6Model, error)
 	// F8Register 方法抽象：注册元数据
-	F8Register(p7s6Model any, s5f8Option ...F8S6OrmModelOption) (*S6Model, error)
+	F8Register(p7s6Model any, s5f8Option ...F8S6ModelOption) (*S6Model, error)
 }
 
-// s6Registry 元数据注册中心
+// S6Registry 元数据注册中心
 // 实现 I9Registry 接口
-type s6Registry struct {
+type S6Registry struct {
 	// m3Model map：解析好的 orm 映射模型
 	// 这里可以预见会出现并发操作，所以用 sync.Map
 	m3Model sync.Map
 }
 
-func (p7this *s6Registry) F8Get(p7s6Model any) (*S6Model, error) {
+func (p7this *S6Registry) F8Get(p7s6Model any) (*S6Model, error) {
 	// 看看传进来的结构体解析过没有
 	i9type := reflect.TypeOf(p7s6Model)
 	value, ok := p7this.m3Model.Load(i9type.String())
@@ -38,7 +38,7 @@ func (p7this *s6Registry) F8Get(p7s6Model any) (*S6Model, error) {
 	return p7this.F8Register(p7s6Model)
 }
 
-func (p7this *s6Registry) F8Register(p7s6Model any, s5f8Option ...F8S6OrmModelOption) (*S6Model, error) {
+func (p7this *S6Registry) F8Register(p7s6Model any, s5f8Option ...F8S6ModelOption) (*S6Model, error) {
 	p7s6om, err := p7this.f8ParseModel(p7s6Model)
 	if nil != err {
 		return nil, err
@@ -57,7 +57,7 @@ func (p7this *s6Registry) F8Register(p7s6Model any, s5f8Option ...F8S6OrmModelOp
 }
 
 // f8ParseModel 解析结构体
-func (p7this *s6Registry) f8ParseModel(p7s6Model any) (*S6Model, error) {
+func (p7this *S6Registry) f8ParseModel(p7s6Model any) (*S6Model, error) {
 	i9ModelType := reflect.TypeOf(p7s6Model)
 	// 只接受一级结构体指针
 	if reflect.Ptr != i9ModelType.Kind() || reflect.Struct != i9ModelType.Elem().Kind() {
@@ -77,9 +77,9 @@ func (p7this *s6Registry) f8ParseModel(p7s6Model any) (*S6Model, error) {
 
 	// 获取结构体字段数量
 	fieldNum := i9ModelType.NumField()
-	s5field := make([]*S6ModelField, 0, fieldNum)
 	m3SToF := make(map[string]*S6ModelField, fieldNum)
 	m3FToS := make(map[string]*S6ModelField, fieldNum)
+	s5p7s6Field := make([]*S6ModelField, 0, fieldNum)
 	// 解析结构体的每个字段
 	for i := 0; i < fieldNum; i++ {
 		s6FieldType := i9ModelType.Field(i)
@@ -101,16 +101,16 @@ func (p7this *s6Registry) f8ParseModel(p7s6Model any) (*S6Model, error) {
 			FieldName:  fieldName,
 			Index:      i,
 		}
-		s5field = append(s5field, p7s6mf)
+		s5p7s6Field = append(s5p7s6Field, p7s6mf)
 		m3SToF[s6FieldType.Name] = p7s6mf
 		m3FToS[fieldName] = p7s6mf
 	}
 
 	p7s6om := &S6Model{
 		TableName:        tableName,
-		S5P7S6ModelField: s5field,
 		M3StructToField:  m3SToF,
 		M3FieldToStruct:  m3FToS,
+		S5P7S6ModelField: s5p7s6Field,
 	}
 
 	return p7s6om, nil
@@ -118,7 +118,7 @@ func (p7this *s6Registry) f8ParseModel(p7s6Model any) (*S6Model, error) {
 
 // f8ParseTag 解析结构体字段的标签
 // 标签格式：`orm:"key1=value1,key2=value2"`
-func (p7this *s6Registry) f8ParseTag(s6tag reflect.StructTag) (map[string]string, error) {
+func (p7this *S6Registry) f8ParseTag(s6tag reflect.StructTag) (map[string]string, error) {
 	// 从 tag 里面拿 orm 标签
 	orm := s6tag.Get("orm")
 	if "" == orm {
@@ -157,7 +157,7 @@ func f8CamelCaseToSnakeCase(oldString string) string {
 }
 
 // F8NewI9Registry 构造 I9Registry
-// s6Registry 是 I9Registry 的实例
+// S6Registry 是 I9Registry 的实例
 func F8NewI9Registry() I9Registry {
-	return &s6Registry{}
+	return &S6Registry{}
 }

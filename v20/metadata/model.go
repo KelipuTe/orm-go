@@ -12,12 +12,13 @@ type I9TableName interface {
 // 处理结构体字段和数据库字段的互相转换
 type S6Model struct {
 	// TableName 结构体对应的表名
-	TableName        string
-	S5P7S6ModelField []*S6ModelField
+	TableName string
 	// M3StructToField map：结构体字段 => 数据库字段
 	M3StructToField map[string]*S6ModelField
 	// M3FieldToStruct map：数据库字段 => 结构体字段
 	M3FieldToStruct map[string]*S6ModelField
+	// S5P7S6ModelField 切片：index => 结构体字段
+	S5P7S6ModelField []*S6ModelField
 }
 
 // S6ModelField orm 映射模型的每个字段

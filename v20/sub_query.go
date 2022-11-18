@@ -2,7 +2,7 @@ package v20
 
 type S6SubQuery struct {
 	s5Select []i9SelectExpr
-	i9From   I9TableReference
+	i9From   i9TableReference
 	alias    string
 
 	i9Builder I9QueryBuilder
@@ -26,19 +26,19 @@ func (this S6SubQuery) F8BuildSubQuery(p7s6Builder *s6QueryBuilder, useAlias boo
 	return nil
 }
 
-func (this S6SubQuery) F8BuildExpression(p7s6Builder *s6QueryBuilder) error {
+func (this S6SubQuery) f8BuildExpression(p7s6Builder *s6QueryBuilder) error {
 	return this.F8BuildSubQuery(p7s6Builder, false)
 }
 
-func (this S6SubQuery) F8GetTableAlies() string {
+func (this S6SubQuery) f8GetTableReferenceAlies() string {
 	return this.alias
 }
 
-func (this S6SubQuery) F8BuildTableReference(p7s6Builder *s6QueryBuilder) error {
+func (this S6SubQuery) f8BuildTableReference(p7s6Builder *s6QueryBuilder) error {
 	return this.F8BuildSubQuery(p7s6Builder, true)
 }
 
-func (this S6SubQuery) F8Join(i9reference I9TableReference) *JoinBuilder {
+func (this S6SubQuery) F8Join(i9reference i9TableReference) *JoinBuilder {
 	return &JoinBuilder{
 		i9LeftReference:  this,
 		operator:         "JOIN",
@@ -46,7 +46,7 @@ func (this S6SubQuery) F8Join(i9reference I9TableReference) *JoinBuilder {
 	}
 }
 
-func (this S6SubQuery) F8LeftJoin(i9reference I9TableReference) *JoinBuilder {
+func (this S6SubQuery) F8LeftJoin(i9reference i9TableReference) *JoinBuilder {
 	return &JoinBuilder{
 		i9LeftReference:  this,
 		operator:         "LEFT JOIN",
@@ -57,6 +57,6 @@ func (this S6SubQuery) F8LeftJoin(i9reference I9TableReference) *JoinBuilder {
 func (this S6SubQuery) F8Column(name string) S6Column {
 	return S6Column{
 		i9From: this,
-		Name:   name,
+		name:   name,
 	}
 }

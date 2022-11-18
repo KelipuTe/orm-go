@@ -41,30 +41,30 @@ func (p7this *s6QueryBuilder) f8WrapWithQuote(name string) {
 func (p7this *s6QueryBuilder) F8BuildWhereCondition(s5p []S6WhereCondition) error {
 	t4p := s5p[0]
 	for i := 1; i < len(s5p); i++ {
-		t4p = t4p.And(s5p[i])
+		t4p = t4p.F8And(s5p[i])
 	}
-	//t4p.F8BuildExpression(p7this)
+	//t4p.f8BuildExpression(p7this)
 	return p7this.F8BuildExpression(t4p)
 }
 
-func (p7this *s6QueryBuilder) F8BuildExpression(expr I9Expression) error {
+func (p7this *s6QueryBuilder) F8BuildExpression(expr i9Expression) error {
 	//var err error
 
 	if nil == expr {
 		return nil
 	}
 
-	return expr.F8BuildExpression(p7this)
+	return expr.f8BuildExpression(p7this)
 
 	//switch t4type := expr.(type) {
 	//case S6WhereCondition:
 	//	// 处理语句
 	//	// 递归处理左边的部分
-	//	_, lIsP := t4type.LeftExpr.(S6WhereCondition)
+	//	_, lIsP := t4type.i9LeftExpr.(S6WhereCondition)
 	//	if lIsP {
 	//		p7this.sqlString.WriteByte('(')
 	//	}
-	//	err = p7this.F8BuildExpression(t4type.LeftExpr)
+	//	err = p7this.f8BuildExpression(t4type.i9LeftExpr)
 	//	if nil != err {
 	//		return err
 	//	}
@@ -81,18 +81,18 @@ func (p7this *s6QueryBuilder) F8BuildExpression(expr I9Expression) error {
 	//	p7this.sqlString.WriteString(t4type.operator.String())
 	//	p7this.sqlString.WriteByte(' ')
 	//	// 递归处理右边的部分
-	//	_, rIsP := t4type.RightExpr.(S6WhereCondition)
+	//	_, rIsP := t4type.i9RightExpr.(S6WhereCondition)
 	//	if rIsP {
 	//		p7this.sqlString.WriteByte('(')
 	//	}
-	//	err = p7this.F8BuildExpression(t4type.RightExpr)
+	//	err = p7this.f8BuildExpression(t4type.i9RightExpr)
 	//	if nil != err {
 	//		return err
 	//	}
 	//	if rIsP {
 	//		p7this.sqlString.WriteByte(')')
 	//	}
-	//case S6Column:
+	//case s6Column:
 	//	// 处理列名
 	//	err = p7this.f8BuildColumn(t4type)
 	//	if nil != err {
@@ -106,9 +106,9 @@ func (p7this *s6QueryBuilder) F8BuildExpression(expr I9Expression) error {
 	//	}
 	//case S6PartRaw:
 	//	// 处理原生 sql
-	//	p7this.sqlString.WriteString(t4type.SQLString)
-	//	if 0 < len(t4type.S5Value) {
-	//		p7this.F8AddParameter(t4type.S5Value...)
+	//	p7this.sqlString.WriteString(t4type.sqlString)
+	//	if 0 < len(t4type.s5Value) {
+	//		p7this.F8AddParameter(t4type.s5Value...)
 	//	}
 	//case S6Value:
 	//	// 处理占位符对应的参数

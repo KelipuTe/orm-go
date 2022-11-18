@@ -10,7 +10,7 @@ import (
 func TestSelectBuildQuery(p7s6t *testing.T) {
 	p7s6DB := F8NewS6DB(nil)
 
-	s5case := []struct {
+	s5s6case := []struct {
 		name         string
 		queryBuilder I9QueryBuilder
 		wantQuery    *S6Query
@@ -25,7 +25,7 @@ func TestSelectBuildQuery(p7s6t *testing.T) {
 		},
 	}
 
-	for _, t4value := range s5case {
+	for _, t4value := range s5s6case {
 		p7s6t.Run(t4value.name, func(p7s6t2 *testing.T) {
 			p7query, err := t4value.queryBuilder.F8BuildQuery()
 			assert.Equal(p7s6t2, t4value.wantErr, err)
@@ -40,7 +40,7 @@ func TestSelectBuildQuery(p7s6t *testing.T) {
 func TestSelectOperator(p7s6t *testing.T) {
 	p7s6DB := F8NewS6DB(nil)
 
-	s5case := []struct {
+	s5s6case := []struct {
 		name         string
 		queryBuilder I9QueryBuilder
 		wantQuery    *S6Query
@@ -75,7 +75,7 @@ func TestSelectOperator(p7s6t *testing.T) {
 		},
 	}
 
-	for _, t4value := range s5case {
+	for _, t4value := range s5s6case {
 		p7s6t.Run(t4value.name, func(p7s6t2 *testing.T) {
 			p7query, err := t4value.queryBuilder.F8BuildQuery()
 			assert.Equal(p7s6t2, t4value.wantErr, err)
@@ -90,7 +90,7 @@ func TestSelectOperator(p7s6t *testing.T) {
 func TestSelectWhere(p7s6t *testing.T) {
 	p7s6DB := F8NewS6DB(nil)
 
-	s5case := []struct {
+	s5s6case := []struct {
 		name         string
 		queryBuilder I9QueryBuilder
 		wantQuery    *S6Query
@@ -118,34 +118,34 @@ func TestSelectWhere(p7s6t *testing.T) {
 			name: "where_two",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
 				F8Where(F8NewS6Column("Id").F8Equal(11)).
-				F8Where(F8NewS6Column("S6Column").F8Equal("aa")),
+				F8Where(F8NewS6Column("s6Column").F8Equal("aa")),
 			wantQuery: &S6Query{
-				SQLString: "SELECT * FROM `app_user` WHERE (`Id` = ?) AND (`S6Column` = ?);",
+				SQLString: "SELECT * FROM `app_user` WHERE (`Id` = ?) AND (`s6Column` = ?);",
 				S5Value:   []any{11, "aa"},
 			},
 		},
 		{
 			name: "where_one_and_one",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
-				F8Where(F8NewS6Column("Id").F8Equal(11).And(F8NewS6Column("S6Column").F8Equal("aa"))),
+				F8Where(F8NewS6Column("Id").F8Equal(11).F8And(F8NewS6Column("s6Column").F8Equal("aa"))),
 			wantQuery: &S6Query{
-				SQLString: "SELECT * FROM `app_user` WHERE (`Id` = ?) AND (`S6Column` = ?);",
+				SQLString: "SELECT * FROM `app_user` WHERE (`Id` = ?) AND (`s6Column` = ?);",
 				S5Value:   []any{11, "aa"},
 			},
 		},
 		{
 			name: "where_one_or_one",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
-				F8Where(F8NewS6Column("Id").F8Equal(11).Or(F8NewS6Column("S6Column").F8Equal("aa"))),
+				F8Where(F8NewS6Column("Id").F8Equal(11).F8Or(F8NewS6Column("s6Column").F8Equal("aa"))),
 			wantQuery: &S6Query{
-				SQLString: "SELECT * FROM `app_user` WHERE (`Id` = ?) OR (`S6Column` = ?);",
+				SQLString: "SELECT * FROM `app_user` WHERE (`Id` = ?) OR (`s6Column` = ?);",
 				S5Value:   []any{11, "aa"},
 			},
 		},
 		{
 			name: "where_not_one",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
-				F8Where(Not(F8NewS6Column("Id").F8Equal(11))),
+				F8Where(F8Not(F8NewS6Column("Id").F8Equal(11))),
 			wantQuery: &S6Query{
 				SQLString: "SELECT * FROM `app_user` WHERE  NOT (`Id` = ?);",
 				S5Value:   []any{11},
@@ -154,33 +154,33 @@ func TestSelectWhere(p7s6t *testing.T) {
 		{
 			name: "where_one_and_(one_and_one)",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
-				F8Where(F8NewS6Column("Id").F8Equal(11).And(F8NewS6Column("S6Column").F8Equal("aa").And(F8NewS6Column("Age").F8Equal(22)))),
+				F8Where(F8NewS6Column("Id").F8Equal(11).F8And(F8NewS6Column("s6Column").F8Equal("aa").F8And(F8NewS6Column("Age").F8Equal(22)))),
 			wantQuery: &S6Query{
-				SQLString: "SELECT * FROM `app_user` WHERE (`Id` = ?) AND ((`S6Column` = ?) AND (`Age` = ?));",
+				SQLString: "SELECT * FROM `app_user` WHERE (`Id` = ?) AND ((`s6Column` = ?) AND (`Age` = ?));",
 				S5Value:   []any{11, "aa", 22},
 			},
 		},
 		{
 			name: "where_one_or_(one_or_one)",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
-				F8Where(F8NewS6Column("Id").F8Equal(11).And(F8NewS6Column("S6Column").F8Equal("aa").Or(F8NewS6Column("Age").F8Equal(22)))),
+				F8Where(F8NewS6Column("Id").F8Equal(11).F8And(F8NewS6Column("s6Column").F8Equal("aa").F8Or(F8NewS6Column("Age").F8Equal(22)))),
 			wantQuery: &S6Query{
-				SQLString: "SELECT * FROM `app_user` WHERE (`Id` = ?) AND ((`S6Column` = ?) OR (`Age` = ?));",
+				SQLString: "SELECT * FROM `app_user` WHERE (`Id` = ?) AND ((`s6Column` = ?) OR (`Age` = ?));",
 				S5Value:   []any{11, "aa", 22},
 			},
 		},
 		{
 			name: "where_one_and_(not_one)",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
-				F8Where(F8NewS6Column("Id").F8Equal(11).And(Not(F8NewS6Column("S6Column").F8Equal("aa")))),
+				F8Where(F8NewS6Column("Id").F8Equal(11).F8And(F8Not(F8NewS6Column("s6Column").F8Equal("aa")))),
 			wantQuery: &S6Query{
-				SQLString: "SELECT * FROM `app_user` WHERE (`Id` = ?) AND ( NOT (`S6Column` = ?));",
+				SQLString: "SELECT * FROM `app_user` WHERE (`Id` = ?) AND ( NOT (`s6Column` = ?));",
 				S5Value:   []any{11, "aa"},
 			},
 		},
 	}
 
-	for _, t4value := range s5case {
+	for _, t4value := range s5s6case {
 		p7s6t.Run(t4value.name, func(p7s6t2 *testing.T) {
 			p7query, err := t4value.queryBuilder.F8BuildQuery()
 			assert.Equal(p7s6t2, t4value.wantErr, err)
@@ -195,7 +195,7 @@ func TestSelectWhere(p7s6t *testing.T) {
 func TestSelectGroupBy(p7s6t *testing.T) {
 	p7s6DB := F8NewS6DB(nil)
 
-	s5case := []struct {
+	s5s6case := []struct {
 		name         string
 		queryBuilder I9QueryBuilder
 		wantQuery    *S6Query
@@ -230,7 +230,7 @@ func TestSelectGroupBy(p7s6t *testing.T) {
 		},
 	}
 
-	for _, t4value := range s5case {
+	for _, t4value := range s5s6case {
 		p7s6t.Run(t4value.name, func(p7s6t2 *testing.T) {
 			p7query, err := t4value.queryBuilder.F8BuildQuery()
 			assert.Equal(p7s6t2, t4value.wantErr, err)
@@ -245,7 +245,7 @@ func TestSelectGroupBy(p7s6t *testing.T) {
 func TestSelectHaving(p7s6t *testing.T) {
 	p7s6DB := F8NewS6DB(nil)
 
-	s5case := []struct {
+	s5s6case := []struct {
 		name         string
 		queryBuilder I9QueryBuilder
 		wantQuery    *S6Query
@@ -293,15 +293,15 @@ func TestSelectHaving(p7s6t *testing.T) {
 			name: "group_by_two_having_two",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
 				F8GroupBy(F8NewS6Column("Age")).F8GroupBy(F8NewS6Column("Sex")).
-				F8Having(F8NewS6Column("Id").F8Equal(11)).F8Having(F8NewS6Column("S6Column").F8Equal("aa")),
+				F8Having(F8NewS6Column("Id").F8Equal(11)).F8Having(F8NewS6Column("s6Column").F8Equal("aa")),
 			wantQuery: &S6Query{
-				SQLString: "SELECT * FROM `app_user` GROUP BY `Age`,`Sex` HAVING (`Id` = ?) AND (`S6Column` = ?);",
+				SQLString: "SELECT * FROM `app_user` GROUP BY `Age`,`Sex` HAVING (`Id` = ?) AND (`s6Column` = ?);",
 				S5Value:   []any{11, "aa"},
 			},
 		},
 	}
 
-	for _, t4value := range s5case {
+	for _, t4value := range s5s6case {
 		p7s6t.Run(t4value.name, func(p7s6t2 *testing.T) {
 			p7query, err := t4value.queryBuilder.F8BuildQuery()
 			assert.Equal(p7s6t2, t4value.wantErr, err)
@@ -316,7 +316,7 @@ func TestSelectHaving(p7s6t *testing.T) {
 func TestSelectOrderBy(p7s6t *testing.T) {
 	p7s6DB := F8NewS6DB(nil)
 
-	s5case := []struct {
+	s5s6case := []struct {
 		name         string
 		queryBuilder I9QueryBuilder
 		wantQuery    *S6Query
@@ -333,33 +333,33 @@ func TestSelectOrderBy(p7s6t *testing.T) {
 		{
 			name: "order_by_one_asc",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
-				F8OrderBy(F8Asc("S6Column")),
+				F8OrderBy(F8Asc("s6Column")),
 			wantQuery: &S6Query{
-				SQLString: "SELECT * FROM `app_user` ORDER BY `S6Column` ASC;",
+				SQLString: "SELECT * FROM `app_user` ORDER BY `s6Column` ASC;",
 				S5Value:   nil,
 			},
 		},
 		{
 			name: "order_by_one_desc",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
-				F8OrderBy(F8Desc("S6Column")),
+				F8OrderBy(F8Desc("s6Column")),
 			wantQuery: &S6Query{
-				SQLString: "SELECT * FROM `app_user` ORDER BY `S6Column` DESC;",
+				SQLString: "SELECT * FROM `app_user` ORDER BY `s6Column` DESC;",
 				S5Value:   nil,
 			},
 		},
 		{
 			name: "order_by_two_asc_desc",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
-				F8OrderBy(F8Asc("S6Column")).F8OrderBy(F8Desc("Age")),
+				F8OrderBy(F8Asc("s6Column")).F8OrderBy(F8Desc("Age")),
 			wantQuery: &S6Query{
-				SQLString: "SELECT * FROM `app_user` ORDER BY `S6Column` ASC,`Age` DESC;",
+				SQLString: "SELECT * FROM `app_user` ORDER BY `s6Column` ASC,`Age` DESC;",
 				S5Value:   nil,
 			},
 		},
 	}
 
-	for _, t4value := range s5case {
+	for _, t4value := range s5s6case {
 		p7s6t.Run(t4value.name, func(p7s6t *testing.T) {
 			p7query, err := t4value.queryBuilder.F8BuildQuery()
 			assert.Equal(p7s6t, t4value.wantErr, err)
@@ -374,7 +374,7 @@ func TestSelectOrderBy(p7s6t *testing.T) {
 func TestSelectOffsetLimit(p7s6t *testing.T) {
 	p7s6DB := F8NewS6DB(nil)
 
-	s5case := []struct {
+	s5s6case := []struct {
 		name         string
 		queryBuilder I9QueryBuilder
 		wantQuery    *S6Query
@@ -409,7 +409,7 @@ func TestSelectOffsetLimit(p7s6t *testing.T) {
 		},
 	}
 
-	for _, t4value := range s5case {
+	for _, t4value := range s5s6case {
 		p7s6t.Run(t4value.name, func(p7s6t *testing.T) {
 			p7query, err := t4value.queryBuilder.F8BuildQuery()
 			assert.Equal(p7s6t, t4value.wantErr, err)
@@ -424,7 +424,7 @@ func TestSelectOffsetLimit(p7s6t *testing.T) {
 func TestSelectSelect(p7s6t *testing.T) {
 	p7s6DB := F8NewS6DB(nil)
 
-	s5case := []struct {
+	s5s6case := []struct {
 		name         string
 		queryBuilder I9QueryBuilder
 		wantQuery    *S6Query
@@ -442,15 +442,15 @@ func TestSelectSelect(p7s6t *testing.T) {
 		{
 			name: "select_two_column",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
-				F8Select(F8NewS6Column("Id")).F8Select(F8NewS6Column("S6Column")),
+				F8Select(F8NewS6Column("Id")).F8Select(F8NewS6Column("s6Column")),
 			wantQuery: &S6Query{
-				SQLString: "SELECT `Id`,`S6Column` FROM `app_user`;",
+				SQLString: "SELECT `Id`,`s6Column` FROM `app_user`;",
 				S5Value:   nil,
 			},
 		},
 	}
 
-	for _, t4value := range s5case {
+	for _, t4value := range s5s6case {
 		p7s6t.Run(t4value.name, func(p7s6t2 *testing.T) {
 			p7query, err := t4value.queryBuilder.F8BuildQuery()
 			assert.Equal(p7s6t2, t4value.wantErr, err)
@@ -465,7 +465,7 @@ func TestSelectSelect(p7s6t *testing.T) {
 func TestSelectAggregate(p7s6t *testing.T) {
 	p7s6DB := F8NewS6DB(nil)
 
-	s5case := []struct {
+	s5s6case := []struct {
 		name         string
 		queryBuilder I9QueryBuilder
 		wantQuery    *S6Query
@@ -474,7 +474,7 @@ func TestSelectAggregate(p7s6t *testing.T) {
 		{
 			name: "select_one_aggregate",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
-				F8Select(Count("Id")),
+				F8Select(F8Count("Id")),
 			wantQuery: &S6Query{
 				SQLString: "SELECT COUNT(`Id`) FROM `app_user`;",
 				S5Value:   nil,
@@ -483,7 +483,7 @@ func TestSelectAggregate(p7s6t *testing.T) {
 		{
 			name: "select_two_aggregate",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
-				F8Select(Count("Id")).F8Select(Avg("Age")),
+				F8Select(F8Count("Id")).F8Select(F8Avg("Age")),
 			wantQuery: &S6Query{
 				SQLString: "SELECT COUNT(`Id`),AVG(`Age`) FROM `app_user`;",
 				S5Value:   nil,
@@ -493,7 +493,7 @@ func TestSelectAggregate(p7s6t *testing.T) {
 			name: "having_one_aggregate",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
 				F8GroupBy(F8NewS6Column("Age")).
-				F8Having(Count("Id").GreaterThan(5)),
+				F8Having(F8Count("Id").GreaterThan(5)),
 			wantQuery: &S6Query{
 				SQLString: "SELECT * FROM `app_user` GROUP BY `Age` HAVING COUNT(`Id`) > ?;",
 				S5Value:   []any{5},
@@ -501,7 +501,7 @@ func TestSelectAggregate(p7s6t *testing.T) {
 		},
 	}
 
-	for _, t4value := range s5case {
+	for _, t4value := range s5s6case {
 		p7s6t.Run(t4value.name, func(p7s6t2 *testing.T) {
 			p7query, err := t4value.queryBuilder.F8BuildQuery()
 			assert.Equal(p7s6t2, t4value.wantErr, err)
@@ -516,7 +516,7 @@ func TestSelectAggregate(p7s6t *testing.T) {
 func TestSelectJoin(p7s6t *testing.T) {
 	p7s6DB := F8NewS6DB(nil)
 
-	s5case := []struct {
+	s5s6case := []struct {
 		name         string
 		queryBuilder I9QueryBuilder
 		wantQuery    *S6Query
@@ -582,7 +582,7 @@ func TestSelectJoin(p7s6t *testing.T) {
 		},
 	}
 
-	for _, t4value := range s5case {
+	for _, t4value := range s5s6case {
 		p7s6t.Run(t4value.name, func(p7s6t2 *testing.T) {
 			p7query, err := t4value.queryBuilder.F8BuildQuery()
 			assert.Equal(p7s6t2, t4value.wantErr, err)
@@ -597,7 +597,7 @@ func TestSelectJoin(p7s6t *testing.T) {
 func TestSelectSubQuery(p7s6t *testing.T) {
 	p7s6DB := F8NewS6DB(nil)
 
-	s5case := []struct {
+	s5s6case := []struct {
 		name         string
 		queryBuilder I9QueryBuilder
 		wantQuery    *S6Query
@@ -631,7 +631,7 @@ func TestSelectSubQuery(p7s6t *testing.T) {
 		},
 	}
 
-	for _, t4value := range s5case {
+	for _, t4value := range s5s6case {
 		p7s6t.Run(t4value.name, func(p7s6t2 *testing.T) {
 			p7query, err := t4value.queryBuilder.F8BuildQuery()
 			assert.Equal(p7s6t2, t4value.wantErr, err)
@@ -646,7 +646,7 @@ func TestSelectSubQuery(p7s6t *testing.T) {
 func TestSelectPartRaw(p7s6t *testing.T) {
 	p7s6DB := F8NewS6DB(nil)
 
-	s5case := []struct {
+	s5s6case := []struct {
 		name         string
 		queryBuilder I9QueryBuilder
 		wantQuery    *S6Query
@@ -664,7 +664,7 @@ func TestSelectPartRaw(p7s6t *testing.T) {
 		{
 			name: "where_part_raw",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
-				F8Where(NewS6PartRaw("Id > ?", 11).ToPredicate()),
+				F8Where(NewS6PartRaw("Id > ?", 11).F8ToWhereCondition()),
 			wantQuery: &S6Query{
 				SQLString: "SELECT * FROM `app_user` WHERE Id > ?;",
 				S5Value:   []any{11},
@@ -673,9 +673,9 @@ func TestSelectPartRaw(p7s6t *testing.T) {
 		{
 			name: "where_part_raw_and_one",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
-				F8Where(NewS6PartRaw("Id > ?", 11).ToPredicate().And(F8NewS6Column("S6Column").F8Equal("aa"))),
+				F8Where(NewS6PartRaw("Id > ?", 11).F8ToWhereCondition().F8And(F8NewS6Column("s6Column").F8Equal("aa"))),
 			wantQuery: &S6Query{
-				SQLString: "SELECT * FROM `app_user` WHERE (Id > ?) AND (`S6Column` = ?);",
+				SQLString: "SELECT * FROM `app_user` WHERE (Id > ?) AND (`s6Column` = ?);",
 				S5Value:   []any{11, "aa"},
 			},
 		},
@@ -683,7 +683,7 @@ func TestSelectPartRaw(p7s6t *testing.T) {
 			name: "having_part_raw",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
 				F8GroupBy(F8NewS6Column("Age")).
-				F8Having(NewS6PartRaw("COUNT(Id) > ?", 5).ToPredicate()),
+				F8Having(NewS6PartRaw("COUNT(Id) > ?", 5).F8ToWhereCondition()),
 			wantQuery: &S6Query{
 				SQLString: "SELECT * FROM `app_user` GROUP BY `Age` HAVING COUNT(Id) > ?;",
 				S5Value:   []any{5},
@@ -691,7 +691,7 @@ func TestSelectPartRaw(p7s6t *testing.T) {
 		},
 	}
 
-	for _, t4value := range s5case {
+	for _, t4value := range s5s6case {
 		p7s6t.Run(t4value.name, func(p7s6t2 *testing.T) {
 			p7query, err := t4value.queryBuilder.F8BuildQuery()
 			assert.Equal(p7s6t2, t4value.wantErr, err)
@@ -703,7 +703,7 @@ func TestSelectPartRaw(p7s6t *testing.T) {
 	}
 }
 
-func TestSelectorF8Get(p7s6t *testing.T) {
+func TestSelectFirst(p7s6t *testing.T) {
 	// 构造 mock 数据库连接
 	p7s6MockDB, sqlMock, err := sqlmock.New()
 	if nil != err {
@@ -714,7 +714,7 @@ func TestSelectorF8Get(p7s6t *testing.T) {
 	}()
 	p7s6DB := F8NewS6DB(p7s6MockDB)
 
-	s5case := []struct {
+	s5s6case := []struct {
 		name      string
 		sqlString string
 		mockRows  *sqlmock.Rows
@@ -735,7 +735,7 @@ func TestSelectorF8Get(p7s6t *testing.T) {
 	}
 
 	// 把预设的查询结果装进 mock
-	for _, t4value := range s5case {
+	for _, t4value := range s5s6case {
 		t4p7eq := sqlMock.ExpectQuery(t4value.sqlString)
 		if nil != t4value.mockErr {
 			t4p7eq.WillReturnError(t4value.mockErr)
@@ -744,10 +744,10 @@ func TestSelectorF8Get(p7s6t *testing.T) {
 		}
 	}
 
-	for _, t4value := range s5case {
+	for _, t4value := range s5s6case {
 		p7s6t.Run(t4value.name, func(p7s6t2 *testing.T) {
 			t4p7s6select := F8NewS6Select[S6APPUserModel](p7s6DB)
-			res, err2 := t4p7s6select.F4Get(context.Background())
+			res, err2 := t4p7s6select.F8First(context.Background())
 			assert.Equal(p7s6t2, t4value.wantErr, err2)
 			if err2 != nil {
 				return

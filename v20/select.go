@@ -7,17 +7,17 @@ import (
 
 // S6Select 用于构造 SELECT 语句
 type S6Select[T any] struct {
-	// s5select 查询子句，对应 select_expr
+	// s5select SELECT 后面的
 	s5select []i9SelectExpr
-	// i9from 表名
-	i9from I9TableReference
-	// s5where WHERE 子句
+	// i9from FROM 后面的
+	i9from i9TableReference
+	// s5where WHERE 后面的
 	s5where []S6WhereCondition
-	// s5GroupBy GROUP BY 子句
+	// s5GroupBy GROUP BY 后面的
 	s5GroupBy []S6Column
-	// s5having GROUP BY 的 HAVING 子句
+	// s5having GROUP BY ... HAVING 后面的
 	s5having []S6WhereCondition
-	// s5OrderBy ORDER BY 子句
+	// s5OrderBy ORDER BY 后面的
 	s5OrderBy []S6OrderBy
 	// limit LIMIT 行数
 	limit int
@@ -105,7 +105,7 @@ func (p7this *S6Select[T]) F8Offset(rowCount int) *S6Select[T] {
 	return p7this
 }
 
-func (p7this *S6Select[T]) F8From(i9reference I9TableReference) *S6Select[T] {
+func (p7this *S6Select[T]) F8From(i9reference i9TableReference) *S6Select[T] {
 	p7this.i9from = i9reference
 	return p7this
 }
@@ -190,7 +190,7 @@ func (p7this *S6Select[T]) F8BuildQuery() (*S6Query, error) {
 		p7this.F8AddParameter(p7this.offset)
 	}
 
-	p7this.sqlString.WriteString(";")
+	p7this.sqlString.WriteByte(';')
 
 	p7s6query := &S6Query{
 		SQLString: p7this.sqlString.String(),
@@ -198,6 +198,14 @@ func (p7this *S6Select[T]) F8BuildQuery() (*S6Query, error) {
 	}
 
 	return p7s6query, nil
+}
+
+func (p7this *S6Select[T]) f8BuildTableReference(reference i9TableReference) error {
+	if nil == reference {
+		p7this.f8WrapWithQuote(p7this.p7s6Model.TableName)
+		return nil
+	}
+	return reference.f8BuildTableReference(&p7this.s6QueryBuilder)
 }
 
 func (p7this *S6Select[T]) f8BuildSelect() error {
@@ -218,19 +226,8 @@ func (p7this *S6Select[T]) f8BuildSelect() error {
 	return nil
 }
 
-func F8NewS6Select[T any](i9session I9Session) *S6Select[T] {
-	t4p7s6monitor := i9session.f8GetS6Monitor()
-	return &S6Select[T]{
-		i9session: i9session,
-		s6QueryBuilder: s6QueryBuilder{
-			s6Monitor: t4p7s6monitor,
-			quote:     t4p7s6monitor.i9Dialect.f8GetQuoter(),
-		},
-	}
-}
-
-// F4Get 执行查询
-func (p7this *S6Select[T]) F4Get(i9ctx context.Context) (*T, error) {
+// F8First 执行查询
+func (p7this *S6Select[T]) F8First(i9ctx context.Context) (*T, error) {
 	p7s6query, _ := p7this.F8BuildQuery()
 
 	// 执行查询
@@ -257,14 +254,7 @@ func (p7this *S6Select[T]) F4Get(i9ctx context.Context) (*T, error) {
 	return t4p7T, err4
 }
 
-func (p7this *S6Select[T]) f8BuildTableReference(reference I9TableReference) error {
-	if nil == reference {
-		p7this.f8WrapWithQuote(p7this.p7s6Model.TableName)
-		return nil
-	}
-	return reference.F8BuildTableReference(&p7this.s6QueryBuilder)
-}
-
+// F8AsSubQuery 构造子查询
 func (p7this *S6Select[T]) F8AsSubQuery(alias string) S6SubQuery {
 	t4i9from := p7this.i9from
 	if nil == t4i9from {
@@ -276,5 +266,16 @@ func (p7this *S6Select[T]) F8AsSubQuery(alias string) S6SubQuery {
 		i9From:    t4i9from,
 		alias:     alias,
 		i9Builder: p7this,
+	}
+}
+
+func F8NewS6Select[T any](i9session I9Session) *S6Select[T] {
+	t4p7s6monitor := i9session.f8GetS6Monitor()
+	return &S6Select[T]{
+		i9session: i9session,
+		s6QueryBuilder: s6QueryBuilder{
+			s6Monitor: t4p7s6monitor,
+			quote:     t4p7s6monitor.i9Dialect.f8GetQuoter(),
+		},
 	}
 }

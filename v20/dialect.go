@@ -26,9 +26,9 @@ func (p7this *s6MySQLDialect) f8BuildOnConflict(p7s6QueryBuilder *s6QueryBuilder
 		}
 		switch t4value2 := t4value.(type) {
 		case S6Column:
-			p7s6QueryBuilder.f8WrapWithQuote(t4value2.Name)
+			p7s6QueryBuilder.f8WrapWithQuote(t4value2.name)
 			p7s6QueryBuilder.sqlString.WriteString("=VALUES(")
-			p7s6QueryBuilder.f8WrapWithQuote(t4value2.Name)
+			p7s6QueryBuilder.f8WrapWithQuote(t4value2.name)
 			p7s6QueryBuilder.sqlString.WriteString(")")
 		case S6Assignment:
 			p7s6QueryBuilder.f8WrapWithQuote(t4value2.Name)
@@ -75,9 +75,9 @@ func (p7this *s6SQLite3Dialect) f8BuildOnConflict(p7s6QueryBuilder *s6QueryBuild
 		}
 		switch t4value2 := t4value.(type) {
 		case S6Column:
-			p7s6QueryBuilder.f8WrapWithQuote(t4value2.Name)
+			p7s6QueryBuilder.f8WrapWithQuote(t4value2.name)
 			p7s6QueryBuilder.sqlString.WriteString("=excluded.")
-			p7s6QueryBuilder.f8WrapWithQuote(t4value2.Name)
+			p7s6QueryBuilder.f8WrapWithQuote(t4value2.name)
 		case S6Assignment:
 			p7s6QueryBuilder.f8WrapWithQuote(t4value2.Name)
 			p7s6QueryBuilder.sqlString.WriteString("=")

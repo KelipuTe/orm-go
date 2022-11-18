@@ -1,6 +1,8 @@
 package v20
 
-type I9TableReference interface {
-	F8BuildTableReference(p7s6qb *s6QueryBuilder) error
-	F8GetTableAlies() string
+// i9TableReference 对应 table_references
+// SELECT 语句 FROM 后面的：表、JOIN 查询、子查询
+type i9TableReference interface {
+	f8BuildTableReference(p7s6qb *s6QueryBuilder) error
+	f8GetTableReferenceAlies() string
 }
