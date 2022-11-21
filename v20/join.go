@@ -43,13 +43,17 @@ func (this S6Join) f8BuildTableReference(p7s6Builder *s6QueryBuilder) error {
 
 	if 0 < len(this.s5On) {
 		p7s6Builder.sqlString.WriteString(" ON ")
-		err = p7s6Builder.F8BuildWhereCondition(this.s5On)
+		err = p7s6Builder.f8BuildWhereCondition(this.s5On)
 		if nil != err {
 			return err
 		}
 	}
 
 	p7s6Builder.sqlString.WriteByte(')')
+	return nil
+}
+
+func (this S6Join) f8GetTableReferenceEntity() []any {
 	return nil
 }
 

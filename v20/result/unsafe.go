@@ -7,6 +7,9 @@ import (
 	"unsafe"
 )
 
+// 确保 F8NewS6ResultUseUnsafe 实现的是 F8NewI9Result
+var _ F8NewI9Result = F8NewS6ResultUseUnsafe
+
 // s6ResultUseUnsafe 用 unsafe 实现 I9Result
 type s6ResultUseUnsafe struct {
 	// p7pointer 存储数据库返回的查询结果的结构体的起始地址
@@ -16,7 +19,7 @@ type s6ResultUseUnsafe struct {
 }
 
 func (p7this s6ResultUseUnsafe) F8GetField(name string) (any, error) {
-	fd, ok := p7this.p7s6Model.M3StructToField[name]
+	fd, ok := p7this.p7s6Model.M3FieldToColumn[name]
 	if !ok {
 		return nil, F8NewErrUnknownColumn(name)
 	}
@@ -26,25 +29,25 @@ func (p7this s6ResultUseUnsafe) F8GetField(name string) (any, error) {
 }
 
 func (p7this s6ResultUseUnsafe) F8SetField(rows *sql.Rows) error {
-	// 返回数据库字段
+	// 返回数据库列名
 	s5ColumnName, err := rows.Columns()
 	if nil != err {
 		return err
 	}
-	if len(s5ColumnName) > len(p7this.p7s6Model.M3FieldToStruct) {
+	if len(s5ColumnName) > len(p7this.p7s6Model.M3ColumnToField) {
 		return ErrTooManyReturnedColumns
 	}
 
 	s5ColumnValue := make([]any, len(s5ColumnName))
 	for i, t4ColumnName := range s5ColumnName {
-		// 通过数据库字段找到对应的结构体字段
-		p7s6ModelField, ok := p7this.p7s6Model.M3FieldToStruct[t4ColumnName]
+		// 通过数据库列名找到对应的结构体属性
+		p7s6ModelField, ok := p7this.p7s6Model.M3ColumnToField[t4ColumnName]
 		if !ok {
 			return F8NewErrUnknownColumn(t4ColumnName)
 		}
-		// 通过结构体字段的内存偏移量，找到结构体字段的位置
+		// 通过结构体属性的内存偏移量，找到结构体属性的位置
 		t4p7pointer := unsafe.Pointer(uintptr(p7this.p7pointer) + p7s6ModelField.Offset)
-		// 在找到的找到结构体字段的位置上构造结构体字段
+		// 在找到的找到结构体属性的位置上构造结构体属性
 		t4value := reflect.NewAt(p7s6ModelField.I9Type, t4p7pointer)
 		s5ColumnValue[i] = t4value.Interface()
 	}
@@ -54,9 +57,6 @@ func (p7this s6ResultUseUnsafe) F8SetField(rows *sql.Rows) error {
 	}
 	return nil
 }
-
-// 确保 F8NewS6ResultUseUnsafe 实现的是 F8NewI9Result
-var _ F8NewI9Result = F8NewS6ResultUseUnsafe
 
 // F8NewS6ResultUseUnsafe 构造 s6ResultUseUnsafe
 func F8NewS6ResultUseUnsafe(value any, p7s5OrmModel *metadata.S6Model) I9Result {

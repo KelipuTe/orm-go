@@ -19,9 +19,9 @@ func (this S6Table) F8As(alias string) S6Table {
 // F8Column 创建带表的列 `table_name`.`column_name`
 func (this S6Table) F8Column(name string) S6Column {
 	return S6Column{
-		i9From: this,
-		name:   name,
-		alias:  "",
+		i9From:    this,
+		fieldName: name,
+		alias:     "",
 	}
 }
 
@@ -40,6 +40,10 @@ func (this S6Table) f8BuildTableReference(p7s6Builder *s6QueryBuilder) error {
 
 func (this S6Table) f8GetTableReferenceAlies() string {
 	return this.alias
+}
+
+func (this S6Table) f8GetTableReferenceEntity() []any {
+	return nil
 }
 
 func (this S6Table) F8Join(i9reference i9TableReference) *JoinBuilder {

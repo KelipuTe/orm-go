@@ -62,7 +62,7 @@ func (p7this *S6Insert[T]) F8BuildQuery() (*S6Query, error) {
 	if 0 != len(p7this.s5Column) {
 		s5p7s6ModelField = make([]*metadata.S6ModelField, 0, len(p7this.s5Column))
 		for _, t4ColumnName := range p7this.s5Column {
-			t4p7s6ModelField, ok := p7this.p7s6Model.M3StructToField[t4ColumnName]
+			t4p7s6ModelField, ok := p7this.p7s6Model.M3FieldToColumn[t4ColumnName]
 			if !ok {
 				return nil, result.F8NewErrUnknownColumn(t4ColumnName)
 			}
@@ -76,7 +76,7 @@ func (p7this *S6Insert[T]) F8BuildQuery() (*S6Query, error) {
 		if 0 < i {
 			p7this.sqlString.WriteByte(',')
 		}
-		p7this.f8WrapWithQuote(t4value.FieldName)
+		p7this.f8WrapWithQuote(t4value.ColumnName)
 	}
 
 	p7this.sqlString.WriteString(") VALUES")
@@ -92,11 +92,11 @@ func (p7this *S6Insert[T]) F8BuildQuery() (*S6Query, error) {
 				p7this.sqlString.WriteByte(',')
 			}
 			p7this.sqlString.WriteByte('?')
-			fdVal, err := t4i9result.F8GetField(t4value2.StructName)
+			fdVal, err := t4i9result.F8GetField(t4value2.FieldName)
 			if err != nil {
 				return nil, err
 			}
-			p7this.F8AddParameter(fdVal)
+			p7this.f8AddParameter(fdVal)
 		}
 
 		p7this.sqlString.WriteByte(')')

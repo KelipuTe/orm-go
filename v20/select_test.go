@@ -51,7 +51,7 @@ func TestSelectOperator(p7s6t *testing.T) {
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
 				F8Where(F8NewS6Column("Id").F8Equal(11)),
 			wantQuery: &S6Query{
-				SQLString: "SELECT * FROM `app_user` WHERE `Id` = ?;",
+				SQLString: "SELECT * FROM `app_user` WHERE `id` = ?;",
 				S5Value:   []any{11},
 			},
 		},
@@ -60,7 +60,7 @@ func TestSelectOperator(p7s6t *testing.T) {
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
 				F8Where(F8NewS6Column("Id").F8GreaterThan(11)),
 			wantQuery: &S6Query{
-				SQLString: "SELECT * FROM `app_user` WHERE `Id` > ?;",
+				SQLString: "SELECT * FROM `app_user` WHERE `id` > ?;",
 				S5Value:   []any{11},
 			},
 		},
@@ -69,7 +69,25 @@ func TestSelectOperator(p7s6t *testing.T) {
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
 				F8Where(F8NewS6Column("Id").F8LessThan(11)),
 			wantQuery: &S6Query{
-				SQLString: "SELECT * FROM `app_user` WHERE `Id` < ?;",
+				SQLString: "SELECT * FROM `app_user` WHERE `id` < ?;",
+				S5Value:   []any{11},
+			},
+		},
+		{
+			name: "where_equal_use_alias_not_effect",
+			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
+				F8Where(F8NewS6Column("Id").F8As("user_id").F8Equal(11)),
+			wantQuery: &S6Query{
+				SQLString: "SELECT * FROM `app_user` WHERE `id` = ?;",
+				S5Value:   []any{11},
+			},
+		},
+		{
+			name: "where_equal_use_tag",
+			queryBuilder: F8NewS6Select[S6APPUserModelV2](p7s6DB).
+				F8Where(F8NewS6Column("Id").F8Equal(11)),
+			wantQuery: &S6Query{
+				SQLString: "SELECT * FROM `app_user` WHERE `user_id` = ?;",
 				S5Value:   []any{11},
 			},
 		},
@@ -575,9 +593,8 @@ func TestSelectJoin(p7s6t *testing.T) {
 						F8Join(t3).F8On(t1.F8Column("id").F8Equal(t3.F8Column("user_id"))))
 			}(),
 			wantQuery: &S6Query{
-				SQLString: "SELECT * FROM ((`app_user` AS `t1` LEFT JOIN `app_user_info` AS `t2` ON `t1`.`id` = `t2`.`user_id`) " +
-					"JOIN `app_user_order` AS `t3` ON `t1`.`id` = `t3`.`user_id`);",
-				S5Value: nil,
+				SQLString: "SELECT * FROM ((`app_user` AS `t1` LEFT JOIN `app_user_info` AS `t2` ON `t1`.`id` = `t2`.`user_id`) JOIN `app_user_order` AS `t3` ON `t1`.`id` = `t3`.`user_id`);",
+				S5Value:   nil,
 			},
 		},
 	}
@@ -726,7 +743,7 @@ func TestSelectFirst(p7s6t *testing.T) {
 			name:      "normal_sql",
 			sqlString: "SELECT .*",
 			mockRows: func() *sqlmock.Rows {
-				rows := sqlmock.NewRows([]string{"id", "name", "age", "sex"})
+				rows := sqlmock.NewRows([]string{"id", "fieldName", "age", "sex"})
 				rows.AddRow([]byte("11"), []byte("aa"), []byte("22"), []byte("1"))
 				return rows
 			}(),

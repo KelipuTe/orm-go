@@ -10,7 +10,7 @@ type S6OrderBy struct {
 }
 
 func (this S6OrderBy) F8BuildOrderBy(p7s6qb *s6QueryBuilder) error {
-	err := this.S6Column.f8BuildColumn(p7s6qb)
+	err := this.S6Column.f8BuildColumn(p7s6qb, false)
 	if nil != err {
 		return err
 	}
@@ -22,7 +22,7 @@ func (this S6OrderBy) F8BuildOrderBy(p7s6qb *s6QueryBuilder) error {
 // F8Asc 升序
 func F8Asc(name string) S6OrderBy {
 	return S6OrderBy{
-		S6Column:    S6Column{name: name},
+		S6Column:    S6Column{fieldName: name},
 		OrderString: "ASC",
 	}
 }
@@ -30,7 +30,7 @@ func F8Asc(name string) S6OrderBy {
 // F8Desc 降序
 func F8Desc(name string) S6OrderBy {
 	return S6OrderBy{
-		S6Column:    S6Column{name: name},
+		S6Column:    S6Column{fieldName: name},
 		OrderString: "DESC",
 	}
 }

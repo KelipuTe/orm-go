@@ -11,7 +11,7 @@ type S6Aggregate struct {
 func (this S6Aggregate) f8BuildAggregate(p7s6Builder *s6QueryBuilder) error {
 	p7s6Builder.sqlString.WriteString(this.name)
 	p7s6Builder.sqlString.WriteByte('(')
-	p7s6Builder.f8WrapWithQuote(this.s6Column.name)
+	p7s6Builder.f8WrapWithQuote(this.s6Column.fieldName)
 	p7s6Builder.sqlString.WriteByte(')')
 	return nil
 }
@@ -55,7 +55,7 @@ func (this S6Aggregate) LessThan(input any) S6WhereCondition {
 func F8Count(name string) S6Aggregate {
 	return S6Aggregate{
 		name:     "COUNT",
-		s6Column: S6Column{name: name},
+		s6Column: S6Column{fieldName: name},
 	}
 }
 
@@ -63,6 +63,6 @@ func F8Count(name string) S6Aggregate {
 func F8Avg(name string) S6Aggregate {
 	return S6Aggregate{
 		name:     "AVG",
-		s6Column: S6Column{name: name},
+		s6Column: S6Column{fieldName: name},
 	}
 }

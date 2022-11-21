@@ -11,7 +11,7 @@ func (this S6Value) f8BuildExpression(p7s6Builder *s6QueryBuilder) error {
 	// sql 里加一个占位符
 	p7s6Builder.sqlString.WriteByte('?')
 	// sql 参数里加一个值
-	p7s6Builder.F8AddParameter(this.Value)
+	p7s6Builder.f8AddParameter(this.Value)
 	return nil
 }
 

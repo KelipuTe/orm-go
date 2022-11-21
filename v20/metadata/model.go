@@ -2,6 +2,13 @@ package metadata
 
 import "reflect"
 
+// orm 支持的结构体属性的 tag 上的 key 都放在这里
+const (
+	// 支持的 key 的数量
+	tagNum           int    = 1
+	tagKeyColumnName string = "column_name"
+)
+
 // I9TableName 接口抽象：实现这个接口来返回自定义的表名
 type I9TableName interface {
 	// F8TableName 方法抽象：返回自定义的表名
@@ -9,35 +16,28 @@ type I9TableName interface {
 }
 
 // S6Model orm 映射模型
-// 处理结构体字段和数据库字段的互相转换
+// 处理结构体属性和数据库列名的互相转换
 type S6Model struct {
 	// TableName 结构体对应的表名
 	TableName string
-	// M3StructToField map：结构体字段 => 数据库字段
-	M3StructToField map[string]*S6ModelField
-	// M3FieldToStruct map：数据库字段 => 结构体字段
-	M3FieldToStruct map[string]*S6ModelField
-	// S5P7S6ModelField 切片：index => 结构体字段
+	// M3FieldToColumn map：结构体属性 => 数据库列名
+	M3FieldToColumn map[string]*S6ModelField
+	// M3ColumnToField map：数据库列名 => 结构体属性
+	M3ColumnToField map[string]*S6ModelField
+	// S5P7S6ModelField 切片：index => 结构体属性
 	S5P7S6ModelField []*S6ModelField
 }
 
-// S6ModelField orm 映射模型的每个字段
+// S6ModelField orm 映射模型的每个属性
 type S6ModelField struct {
-	// StructName 结构体字段名
-	StructName string
-	// I9Type 结构体字段类型
-	I9Type reflect.Type
-	// Offset 结构体字段相对于对象的起始地址的偏移量
-	Offset uintptr
-	// FieldName 数据库字段名
+	// FieldName 结构体属性名
 	FieldName string
-	// 反射时的下标
+	// I9Type 结构体属性反射类型
+	I9Type reflect.Type
+	// Offset 结构体属性相对于对象的起始地址的偏移量
+	Offset uintptr
+	// ColumnName 数据库列名
+	ColumnName string
+	// 反射时得到的下标
 	Index int
 }
-
-// orm 支持的结构体字段的 tag 上的 key 都放在这里
-const (
-	// 支持的 key 的数量
-	tagNum      int    = 1
-	tagKeyField string = "field"
-)

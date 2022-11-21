@@ -5,9 +5,12 @@ import (
 	"database/sql"
 )
 
+// S6Tx 框架的事务对象：封装真正的事务对象
 type S6Tx struct {
+	// p7s6SqlTx 真正的事务对象
 	p7s6SqlTx *sql.Tx
-	p7s6DB    *S6DB
+	// p7s6DB 框架的数据库对象
+	p7s6DB *S6DB
 }
 
 func (p7this *S6Tx) f8GetS6Monitor() s6Monitor {

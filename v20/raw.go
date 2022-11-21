@@ -13,7 +13,7 @@ type S6PartRaw struct {
 func (this S6PartRaw) f8PartRaw(p7s6qb *s6QueryBuilder) error {
 	p7s6qb.sqlString.WriteString(this.sqlString)
 	if 0 < len(this.s5Value) {
-		p7s6qb.F8AddParameter(this.s5Value...)
+		p7s6qb.f8AddParameter(this.s5Value...)
 	}
 	return nil
 }

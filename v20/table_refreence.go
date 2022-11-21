@@ -5,4 +5,5 @@ package v20
 type i9TableReference interface {
 	f8BuildTableReference(p7s6qb *s6QueryBuilder) error
 	f8GetTableReferenceAlies() string
+	f8GetTableReferenceEntity() []any
 }

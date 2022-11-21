@@ -16,7 +16,7 @@ func (this S6SubQuery) F8BuildSubQuery(p7s6Builder *s6QueryBuilder, useAlias boo
 	p7s6Builder.sqlString.WriteByte('(')
 	p7s6Builder.sqlString.WriteString(query.SQLString[:len(query.SQLString)-1])
 	if 0 < len(query.S5Value) {
-		p7s6Builder.F8AddParameter(query.S5Value...)
+		p7s6Builder.f8AddParameter(query.S5Value...)
 	}
 	p7s6Builder.sqlString.WriteByte(')')
 	if useAlias && "" != this.alias {
@@ -32,6 +32,10 @@ func (this S6SubQuery) f8BuildExpression(p7s6Builder *s6QueryBuilder) error {
 
 func (this S6SubQuery) f8GetTableReferenceAlies() string {
 	return this.alias
+}
+
+func (this S6SubQuery) f8GetTableReferenceEntity() []any {
+	return nil
 }
 
 func (this S6SubQuery) f8BuildTableReference(p7s6Builder *s6QueryBuilder) error {
@@ -56,7 +60,7 @@ func (this S6SubQuery) F8LeftJoin(i9reference i9TableReference) *JoinBuilder {
 
 func (this S6SubQuery) F8Column(name string) S6Column {
 	return S6Column{
-		i9From: this,
-		name:   name,
+		i9From:    this,
+		fieldName: name,
 	}
 }

@@ -3,9 +3,12 @@ package v20
 var S6MySQLDialect I9Dialect = &s6MySQLDialect{}
 var S6SQLite3Dialect I9Dialect = &s6SQLite3Dialect{}
 
+// I9Dialect 方言抽象：处理不同数据库语句中不同的部分
 type I9Dialect interface {
-	// quoter 返回一个引号，引用列名，表名的引号
+	// f8GetQuoter 返回一个引号，引用列名，表名的引号
 	f8GetQuoter() byte
+	// f8BuildOnConflict 构造 On CONFLICT
+	// MySQL 里的 UPSERT，SQLite3 里的 UPSERT 不一样
 	f8BuildOnConflict(*s6QueryBuilder, *S6Conflict) error
 }
 
@@ -26,14 +29,14 @@ func (p7this *s6MySQLDialect) f8BuildOnConflict(p7s6QueryBuilder *s6QueryBuilder
 		}
 		switch t4value2 := t4value.(type) {
 		case S6Column:
-			p7s6QueryBuilder.f8WrapWithQuote(t4value2.name)
+			p7s6QueryBuilder.f8WrapWithQuote(t4value2.fieldName)
 			p7s6QueryBuilder.sqlString.WriteString("=VALUES(")
-			p7s6QueryBuilder.f8WrapWithQuote(t4value2.name)
+			p7s6QueryBuilder.f8WrapWithQuote(t4value2.fieldName)
 			p7s6QueryBuilder.sqlString.WriteString(")")
 		case S6Assignment:
 			p7s6QueryBuilder.f8WrapWithQuote(t4value2.Name)
 			p7s6QueryBuilder.sqlString.WriteString("=")
-			return p7s6QueryBuilder.F8BuildExpression(t4value2.Expr)
+			return p7s6QueryBuilder.f8BuildExpression(t4value2.Expr)
 		default:
 			return NewErrUnsupportedExpressionType(t4value2)
 		}
@@ -59,7 +62,7 @@ func (p7this *s6SQLite3Dialect) f8BuildOnConflict(p7s6QueryBuilder *s6QueryBuild
 			if 0 < i {
 				p7s6QueryBuilder.sqlString.WriteByte(',')
 			}
-			err := t4value.f8BuildColumn(p7s6QueryBuilder)
+			err := t4value.f8BuildColumn(p7s6QueryBuilder, false)
 			if nil != err {
 				return err
 			}
@@ -75,13 +78,13 @@ func (p7this *s6SQLite3Dialect) f8BuildOnConflict(p7s6QueryBuilder *s6QueryBuild
 		}
 		switch t4value2 := t4value.(type) {
 		case S6Column:
-			p7s6QueryBuilder.f8WrapWithQuote(t4value2.name)
+			p7s6QueryBuilder.f8WrapWithQuote(t4value2.fieldName)
 			p7s6QueryBuilder.sqlString.WriteString("=excluded.")
-			p7s6QueryBuilder.f8WrapWithQuote(t4value2.name)
+			p7s6QueryBuilder.f8WrapWithQuote(t4value2.fieldName)
 		case S6Assignment:
 			p7s6QueryBuilder.f8WrapWithQuote(t4value2.Name)
 			p7s6QueryBuilder.sqlString.WriteString("=")
-			return p7s6QueryBuilder.F8BuildExpression(t4value2.Expr)
+			return p7s6QueryBuilder.f8BuildExpression(t4value2.Expr)
 		default:
 			return NewErrUnsupportedExpressionType(t4value2)
 		}

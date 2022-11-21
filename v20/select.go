@@ -120,7 +120,6 @@ func (p7this *S6Select[T]) F8BuildQuery() (*S6Query, error) {
 
 	p7this.sqlString.WriteString("SELECT ")
 
-	// 处理查询的列
 	err = p7this.f8BuildSelect()
 	if nil != err {
 		return nil, err
@@ -128,7 +127,7 @@ func (p7this *S6Select[T]) F8BuildQuery() (*S6Query, error) {
 
 	p7this.sqlString.WriteString(" FROM ")
 
-	// 处理表
+	// 处理 FROM 后面的
 	err = p7this.f8BuildTableReference(p7this.i9from)
 	if nil != err {
 		return nil, err
@@ -137,7 +136,7 @@ func (p7this *S6Select[T]) F8BuildQuery() (*S6Query, error) {
 	// 处理 where
 	if 0 < len(p7this.s5where) {
 		p7this.sqlString.WriteString(" WHERE ")
-		err = p7this.F8BuildWhereCondition(p7this.s5where)
+		err = p7this.f8BuildWhereCondition(p7this.s5where)
 		if nil != err {
 			return nil, err
 		}
@@ -150,7 +149,7 @@ func (p7this *S6Select[T]) F8BuildQuery() (*S6Query, error) {
 			if 0 < i {
 				p7this.sqlString.WriteByte(',')
 			}
-			err = t4value.f8BuildColumn(&p7this.s6QueryBuilder)
+			err = t4value.f8BuildColumn(&p7this.s6QueryBuilder, false)
 			if nil != err {
 				return nil, err
 			}
@@ -159,7 +158,7 @@ func (p7this *S6Select[T]) F8BuildQuery() (*S6Query, error) {
 		// 在有 group by 的情况下，才处理 having
 		if 0 < len(p7this.s5having) {
 			p7this.sqlString.WriteString(" HAVING ")
-			err = p7this.F8BuildWhereCondition(p7this.s5having)
+			err = p7this.f8BuildWhereCondition(p7this.s5having)
 			if nil != err {
 				return nil, err
 			}
@@ -183,11 +182,11 @@ func (p7this *S6Select[T]) F8BuildQuery() (*S6Query, error) {
 	// 处理 limit offset
 	if 0 < p7this.limit {
 		p7this.sqlString.WriteString(" LIMIT ?")
-		p7this.F8AddParameter(p7this.limit)
+		p7this.f8AddParameter(p7this.limit)
 	}
 	if 0 < p7this.offset {
 		p7this.sqlString.WriteString(" OFFSET ?")
-		p7this.F8AddParameter(p7this.offset)
+		p7this.f8AddParameter(p7this.offset)
 	}
 
 	p7this.sqlString.WriteByte(';')
@@ -208,12 +207,12 @@ func (p7this *S6Select[T]) f8BuildTableReference(reference i9TableReference) err
 	return reference.f8BuildTableReference(&p7this.s6QueryBuilder)
 }
 
+// f8BuildSelect 处理 SELECT 后面的
 func (p7this *S6Select[T]) f8BuildSelect() error {
 	if 0 >= len(p7this.s5select) {
 		p7this.sqlString.WriteByte('*')
 		return nil
 	}
-
 	for i, t4value := range p7this.s5select {
 		if 0 < i {
 			p7this.sqlString.WriteByte(',')
