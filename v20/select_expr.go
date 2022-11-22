@@ -4,4 +4,6 @@ package v20
 type i9SelectExpr interface {
 	// f8BuildSelectExpr 构造 select_expr
 	f8BuildSelectExpr(p7s6Builder *s6QueryBuilder) error
+	f8GetFieldName() string
+	f8GetAlias() string
 }

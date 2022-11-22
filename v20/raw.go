@@ -22,6 +22,14 @@ func (this S6PartRaw) f8BuildSelectExpr(p7s6qb *s6QueryBuilder) error {
 	return this.f8PartRaw(p7s6qb)
 }
 
+func (this S6PartRaw) f8GetFieldName() string {
+	return ""
+}
+
+func (this S6PartRaw) f8GetAlias() string {
+	return ""
+}
+
 func (this S6PartRaw) f8BuildExpression(p7s6Builder *s6QueryBuilder) error {
 	return this.f8PartRaw(p7s6Builder)
 }

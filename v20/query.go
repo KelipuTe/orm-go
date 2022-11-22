@@ -34,6 +34,7 @@ type s6QueryBuilder struct {
 	s5value []any
 }
 
+// f8WrapWithQuote 两边加引号
 func (p7this *s6QueryBuilder) f8WrapWithQuote(name string) {
 	p7this.sqlString.WriteByte(p7this.quote)
 	p7this.sqlString.WriteString(name)

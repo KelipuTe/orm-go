@@ -53,8 +53,23 @@ func (this S6Join) f8BuildTableReference(p7s6Builder *s6QueryBuilder) error {
 	return nil
 }
 
-func (this S6Join) f8GetTableReferenceEntity() []any {
-	return nil
+func (this S6Join) f8CheckColumn(p7s6Builder *s6QueryBuilder, s6Column S6Column) (string, error) {
+	var columnName string = ""
+	var err error = f8NewErrUnknowStructField(s6Column.fieldName)
+
+	if nil != this.i9LeftReference {
+		columnName, err = this.i9LeftReference.f8CheckColumn(p7s6Builder, s6Column)
+		if nil == err {
+			return columnName, nil
+		}
+	}
+	if nil != this.i9RightReference {
+		columnName, err = this.i9RightReference.f8CheckColumn(p7s6Builder, s6Column)
+		if nil == err {
+			return columnName, nil
+		}
+	}
+	return columnName, err
 }
 
 func (this S6Join) F8Join(i9reference i9TableReference) *JoinBuilder {

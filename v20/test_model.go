@@ -12,11 +12,12 @@ func (p7this S6APPUserModel) F8TableName() string {
 }
 
 type S6APPUserModelV2 struct {
-	Id int `orm:"column_name=user_id"`
+	Id  int  `orm:"column_name=user_id"`
+	Age int8 `orm:"column_name=user_age"`
 }
 
 func (p7this S6APPUserModelV2) F8TableName() string {
-	return "app_user"
+	return "app_user_v2"
 }
 
 type S6APPUserInfoModel struct {

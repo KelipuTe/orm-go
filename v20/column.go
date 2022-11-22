@@ -1,7 +1,5 @@
 package v20
 
-import "orm-go/v20/metadata"
-
 // S6Column 对应 col_name
 // 即语句中表示[表、JOIN、子查询]中列的部分
 type S6Column struct {
@@ -16,26 +14,12 @@ type S6Column struct {
 // f8BuildColumn 构造列
 // p7s6Builder 查询构造器
 func (this S6Column) f8BuildColumn(p7s6Builder *s6QueryBuilder, isUseAlias bool) error {
-	var ok bool = false
-	var p7s6ModelField *metadata.S6ModelField
 	var columnName string = ""
+	var err error = f8NewErrUnknowStructField(this.fieldName)
 
 	// 处理表
 	if nil != this.i9From {
-		// 校验属性存不存在，如果存在，就转换成数据库列名
-		s5Entity := this.i9From.f8GetTableReferenceEntity()
-		for _, t4value := range s5Entity {
-			p7s6Model, err := p7s6Builder.s6Monitor.i9Registry.F8Get(t4value)
-			if nil == err {
-				p7s6ModelField, ok = p7s6Model.M3FieldToColumn[this.fieldName]
-				if ok {
-					// 找到
-					ok = true
-					columnName = p7s6ModelField.ColumnName
-					break
-				}
-			}
-		}
+		columnName, err = this.i9From.f8CheckColumn(p7s6Builder, this)
 		// 处理表的别名
 		alies := this.i9From.f8GetTableReferenceAlies()
 		if "" != alies {
@@ -43,10 +27,10 @@ func (this S6Column) f8BuildColumn(p7s6Builder *s6QueryBuilder, isUseAlias bool)
 			p7s6Builder.sqlString.WriteByte('.')
 		}
 	}
-	// 上面的逻辑没找到属性，就走默认的校验一次
-	if !ok {
+	// 上面的逻辑没找到属性，就走默认逻辑，再校验一次
+	if nil != err {
 		// 校验属性存不存在，存在转换成数据库列名
-		p7s6ModelField, ok = p7s6Builder.p7s6Model.M3FieldToColumn[this.fieldName]
+		p7s6ModelField, ok := p7s6Builder.p7s6Model.M3FieldToColumn[this.fieldName]
 		if !ok {
 			return f8NewErrUnknowStructField(this.fieldName)
 		}
@@ -56,12 +40,12 @@ func (this S6Column) f8BuildColumn(p7s6Builder *s6QueryBuilder, isUseAlias bool)
 	// 处理列的别名
 	if isUseAlias && "" != this.alias {
 		p7s6Builder.sqlString.WriteString(" AS ")
-		p7s6Builder.sqlString.WriteString(this.alias)
+		p7s6Builder.f8WrapWithQuote(this.alias)
 	}
 	return nil
 }
 
-// F8As 给表设置别名
+// F8As 给列设置别名
 func (this S6Column) F8As(alias string) S6Column {
 	return S6Column{
 		i9From:    this.i9From,
@@ -72,6 +56,14 @@ func (this S6Column) F8As(alias string) S6Column {
 
 func (this S6Column) f8BuildSelectExpr(p7s6qb *s6QueryBuilder) error {
 	return this.f8BuildColumn(p7s6qb, true)
+}
+
+func (this S6Column) f8GetFieldName() string {
+	return this.fieldName
+}
+
+func (this S6Column) f8GetAlias() string {
+	return this.alias
 }
 
 func (this S6Column) f8BuildExpression(p7s6Builder *s6QueryBuilder) error {
