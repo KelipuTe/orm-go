@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/stretchr/testify/assert"
+	"orm-go/v20/internal"
 	"testing"
 )
 
@@ -865,7 +866,7 @@ func TestSelectJoinAndSubQuery(p7s6t *testing.T) {
 					t1.F8Join(subb).F8On(t1.F8Column("Id").F8Equal(subb.F8Column("Info2"))))
 			}(),
 			wantQuery: nil,
-			wantErr:   f8NewErrUnknowStructField("Info2"),
+			wantErr:   internal.F8NewErrUnknownField("Info2"),
 		},
 		{
 			name: "select_expr_(table_a_join_sub_b_set_select_expr)",
@@ -893,7 +894,7 @@ func TestSelectJoinAndSubQuery(p7s6t *testing.T) {
 					F8Select(subb.F8Column("Info2"))
 			}(),
 			wantQuery: nil,
-			wantErr:   f8NewErrUnknowStructField("Info2"),
+			wantErr:   internal.F8NewErrUnknownField("Info2"),
 		},
 	}
 

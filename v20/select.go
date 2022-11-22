@@ -2,7 +2,7 @@ package v20
 
 import (
 	"context"
-	"orm-go/v20/result"
+	"orm-go/v20/internal"
 )
 
 // S6Select 用于构造 SELECT 语句
@@ -193,7 +193,7 @@ func (p7this *S6Select[T]) F8BuildQuery() (*S6Query, error) {
 
 	p7s6query := &S6Query{
 		SQLString: p7this.sqlString.String(),
-		S5Value:   p7this.s5value,
+		S5Value:   p7this.s5Value,
 	}
 
 	return p7s6query, nil
@@ -237,7 +237,7 @@ func (p7this *S6Select[T]) F8First(i9ctx context.Context) (*T, error) {
 
 	// 处理数据库返回的查询结果
 	if !rows.Next() {
-		return nil, result.ErrNoRows
+		return nil, internal.ErrNoRows
 	}
 
 	// new 一个类型 T 的变量

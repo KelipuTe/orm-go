@@ -2,6 +2,7 @@ package result
 
 import (
 	"database/sql"
+	"orm-go/v20/internal"
 	"orm-go/v20/metadata"
 	"reflect"
 )
@@ -20,7 +21,7 @@ type s6ResultUseReflect struct {
 func (p7this s6ResultUseReflect) F8GetField(name string) (any, error) {
 	res := p7this.s6Value.FieldByName(name)
 	if res == (reflect.Value{}) {
-		return nil, F8NewErrUnknownColumn(name)
+		return nil, internal.F8NewErrUnknownColumn(name)
 	}
 	return res.Interface(), nil
 }
@@ -32,7 +33,7 @@ func (p7this s6ResultUseReflect) F8SetField(rows *sql.Rows) error {
 		return err
 	}
 	if len(s5ColumnName) > len(p7this.p7s6Model.M3ColumnToField) {
-		return ErrTooManyReturnedColumns
+		return internal.ErrTooManyReturnedColumns
 	}
 
 	// s5ColumnValue 和 s5ColumnValueElem 最终都指向同一个对象
@@ -42,7 +43,7 @@ func (p7this s6ResultUseReflect) F8SetField(rows *sql.Rows) error {
 		// 通过数据库列名找到对应的结构体属性
 		p7s6ModelField, ok := p7this.p7s6Model.M3ColumnToField[t4ColumnName]
 		if !ok {
-			return F8NewErrUnknownColumn(t4ColumnName)
+			return internal.F8NewErrUnknownColumn(t4ColumnName)
 		}
 		// 构造结构体属性
 		t4value := reflect.New(p7s6ModelField.I9Type)

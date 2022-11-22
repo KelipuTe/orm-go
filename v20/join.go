@@ -1,5 +1,7 @@
 package v20
 
+import "orm-go/v20/internal"
+
 // S6Join 对应 JOIN，可以嵌套
 type S6Join struct {
 	// i9LeftReference JOIN 左边的部分
@@ -55,7 +57,7 @@ func (this S6Join) f8BuildTableReference(p7s6Builder *s6QueryBuilder) error {
 
 func (this S6Join) f8CheckColumn(p7s6Builder *s6QueryBuilder, s6Column S6Column) (string, error) {
 	var columnName string = ""
-	var err error = f8NewErrUnknowStructField(s6Column.fieldName)
+	var err error = internal.F8NewErrUnknownField(s6Column.fieldName)
 
 	if nil != this.i9LeftReference {
 		columnName, err = this.i9LeftReference.f8CheckColumn(p7s6Builder, s6Column)

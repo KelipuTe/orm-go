@@ -30,8 +30,8 @@ type s6QueryBuilder struct {
 	quote byte
 	// sqlString 带有占位符的 SQL 语句
 	sqlString strings.Builder
-	// s5value SQL 语句中占位符对应的参数
-	s5value []any
+	// s5Value SQL 语句中占位符对应的参数
+	s5Value []any
 }
 
 // f8WrapWithQuote 两边加引号
@@ -59,8 +59,8 @@ func (p7this *s6QueryBuilder) f8BuildExpression(expr i9Expression) error {
 
 // f8AddParameter 添加占位符对应的参数
 func (p7this *s6QueryBuilder) f8AddParameter(s5p ...any) {
-	if nil == p7this.s5value {
-		p7this.s5value = make([]any, 0, 8)
+	if nil == p7this.s5Value {
+		p7this.s5Value = make([]any, 0, 8)
 	}
-	p7this.s5value = append(p7this.s5value, s5p...)
+	p7this.s5Value = append(p7this.s5Value, s5p...)
 }

@@ -1,5 +1,7 @@
 package v20
 
+import "orm-go/v20/internal"
+
 var S6MySQLDialect I9Dialect = &s6MySQLDialect{}
 var S6SQLite3Dialect I9Dialect = &s6SQLite3Dialect{}
 
@@ -21,24 +23,28 @@ func (p7this *s6MySQLDialect) f8GetQuoter() byte {
 	return '`'
 }
 
-func (p7this *s6MySQLDialect) f8BuildOnConflict(p7s6QueryBuilder *s6QueryBuilder, p7s6Conflict *S6Conflict) error {
-	p7s6QueryBuilder.sqlString.WriteString(" ON DUPLICATE KEY UPDATE ")
+func (p7this *s6MySQLDialect) f8BuildOnConflict(p7s6Builder *s6QueryBuilder, p7s6Conflict *S6Conflict) error {
+	p7s6Builder.sqlString.WriteString(" ON DUPLICATE KEY UPDATE ")
 	for i, t4value := range p7s6Conflict.S5Assignment {
 		if 0 < i {
-			p7s6QueryBuilder.sqlString.WriteByte(',')
+			p7s6Builder.sqlString.WriteByte(',')
 		}
 		switch t4value2 := t4value.(type) {
 		case S6Column:
-			p7s6QueryBuilder.f8WrapWithQuote(t4value2.fieldName)
-			p7s6QueryBuilder.sqlString.WriteString("=VALUES(")
-			p7s6QueryBuilder.f8WrapWithQuote(t4value2.fieldName)
-			p7s6QueryBuilder.sqlString.WriteString(")")
+			p7s6ModelField, ok := p7s6Builder.p7s6Model.M3FieldToColumn[t4value2.fieldName]
+			if !ok {
+				return internal.F8NewErrUnknownField(t4value2.fieldName)
+			}
+			p7s6Builder.f8WrapWithQuote(p7s6ModelField.ColumnName)
+			p7s6Builder.sqlString.WriteString("=VALUES(")
+			p7s6Builder.f8WrapWithQuote(p7s6ModelField.ColumnName)
+			p7s6Builder.sqlString.WriteString(")")
 		case S6Assignment:
-			p7s6QueryBuilder.f8WrapWithQuote(t4value2.Name)
-			p7s6QueryBuilder.sqlString.WriteString("=")
-			return p7s6QueryBuilder.f8BuildExpression(t4value2.Expr)
+			p7s6Builder.f8WrapWithQuote(t4value2.Name)
+			p7s6Builder.sqlString.WriteString("=")
+			return p7s6Builder.f8BuildExpression(t4value2.Expr)
 		default:
-			return NewErrUnsupportedExpressionType(t4value2)
+			return internal.NewErrUnsupportedExpressionType(t4value2)
 		}
 	}
 	return nil
@@ -53,40 +59,44 @@ func (p7this *s6SQLite3Dialect) f8GetQuoter() byte {
 	return '`'
 }
 
-func (p7this *s6SQLite3Dialect) f8BuildOnConflict(p7s6QueryBuilder *s6QueryBuilder, p7s6Conflict *S6Conflict) error {
-	p7s6QueryBuilder.sqlString.WriteString(" ON CONFLICT ")
+func (p7this *s6SQLite3Dialect) f8BuildOnConflict(p7s6Builder *s6QueryBuilder, p7s6Conflict *S6Conflict) error {
+	p7s6Builder.sqlString.WriteString(" ON CONFLICT ")
 
 	if 0 < len(p7s6Conflict.S5ConflictColumn) {
-		p7s6QueryBuilder.sqlString.WriteByte('(')
+		p7s6Builder.sqlString.WriteByte('(')
 		for i, t4value := range p7s6Conflict.S5ConflictColumn {
 			if 0 < i {
-				p7s6QueryBuilder.sqlString.WriteByte(',')
+				p7s6Builder.sqlString.WriteByte(',')
 			}
-			err := t4value.f8BuildColumn(p7s6QueryBuilder, false)
+			err := t4value.f8BuildColumn(p7s6Builder, false)
 			if nil != err {
 				return err
 			}
 		}
-		p7s6QueryBuilder.sqlString.WriteByte(')')
+		p7s6Builder.sqlString.WriteByte(')')
 	}
 
-	p7s6QueryBuilder.sqlString.WriteString(" DO UPDATE SET ")
+	p7s6Builder.sqlString.WriteString(" DO UPDATE SET ")
 
 	for i, t4value := range p7s6Conflict.S5Assignment {
 		if 0 < i {
-			p7s6QueryBuilder.sqlString.WriteByte(',')
+			p7s6Builder.sqlString.WriteByte(',')
 		}
 		switch t4value2 := t4value.(type) {
 		case S6Column:
-			p7s6QueryBuilder.f8WrapWithQuote(t4value2.fieldName)
-			p7s6QueryBuilder.sqlString.WriteString("=excluded.")
-			p7s6QueryBuilder.f8WrapWithQuote(t4value2.fieldName)
+			p7s6ModelField, ok := p7s6Builder.p7s6Model.M3FieldToColumn[t4value2.fieldName]
+			if !ok {
+				return internal.F8NewErrUnknownField(t4value2.fieldName)
+			}
+			p7s6Builder.f8WrapWithQuote(p7s6ModelField.ColumnName)
+			p7s6Builder.sqlString.WriteString("=excluded.")
+			p7s6Builder.f8WrapWithQuote(p7s6ModelField.ColumnName)
 		case S6Assignment:
-			p7s6QueryBuilder.f8WrapWithQuote(t4value2.Name)
-			p7s6QueryBuilder.sqlString.WriteString("=")
-			return p7s6QueryBuilder.f8BuildExpression(t4value2.Expr)
+			p7s6Builder.f8WrapWithQuote(t4value2.Name)
+			p7s6Builder.sqlString.WriteString("=")
+			return p7s6Builder.f8BuildExpression(t4value2.Expr)
 		default:
-			return NewErrUnsupportedExpressionType(t4value2)
+			return internal.NewErrUnsupportedExpressionType(t4value2)
 		}
 	}
 

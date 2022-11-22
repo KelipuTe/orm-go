@@ -1,5 +1,7 @@
 package v20
 
+import "orm-go/v20/internal"
+
 // S6Table 表，对应 table_references
 type S6Table struct {
 	// p7Entity 用构造器的那个泛型 new(T) 出来的，用于获取表名
@@ -50,7 +52,7 @@ func (this S6Table) f8CheckColumn(p7s6Builder *s6QueryBuilder, s6Column S6Column
 			return p7s6ModelField.ColumnName, nil
 		}
 	}
-	return "", f8NewErrUnknowStructField(s6Column.fieldName)
+	return "", internal.F8NewErrUnknownField(s6Column.fieldName)
 }
 
 func (this S6Table) F8Join(i9reference i9TableReference) *JoinBuilder {

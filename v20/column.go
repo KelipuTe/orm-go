@@ -1,5 +1,7 @@
 package v20
 
+import "orm-go/v20/internal"
+
 // S6Column 对应 col_name
 // 即语句中表示[表、JOIN、子查询]中列的部分
 type S6Column struct {
@@ -15,7 +17,7 @@ type S6Column struct {
 // p7s6Builder 查询构造器
 func (this S6Column) f8BuildColumn(p7s6Builder *s6QueryBuilder, isUseAlias bool) error {
 	var columnName string = ""
-	var err error = f8NewErrUnknowStructField(this.fieldName)
+	var err error = internal.F8NewErrUnknownField(this.fieldName)
 
 	// 处理表
 	if nil != this.i9From {
@@ -32,7 +34,7 @@ func (this S6Column) f8BuildColumn(p7s6Builder *s6QueryBuilder, isUseAlias bool)
 		// 校验属性存不存在，存在转换成数据库列名
 		p7s6ModelField, ok := p7s6Builder.p7s6Model.M3FieldToColumn[this.fieldName]
 		if !ok {
-			return f8NewErrUnknowStructField(this.fieldName)
+			return internal.F8NewErrUnknownField(this.fieldName)
 		}
 		columnName = p7s6ModelField.ColumnName
 	}

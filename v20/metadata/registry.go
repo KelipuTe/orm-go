@@ -1,6 +1,7 @@
 package metadata
 
 import (
+	"orm-go/v20/internal"
 	"reflect"
 	"strings"
 	"sync"
@@ -90,7 +91,7 @@ func (p7this *S6Registry) f8ParseModel(p7s6Model any) (*S6Model, error) {
 	i9ModelType := reflect.TypeOf(p7s6Model)
 	// 只接受一级结构体指针
 	if reflect.Ptr != i9ModelType.Kind() || reflect.Struct != i9ModelType.Elem().Kind() {
-		return nil, F8NewErrInputOnlyStructPointer()
+		return nil, internal.F8NewErrInputOnlyStructPointer()
 	}
 	i9ModelType = i9ModelType.Elem()
 
@@ -160,7 +161,7 @@ func (p7this *S6Registry) f8ParseTag(s6tag reflect.StructTag) (map[string]string
 		t4s5kv := strings.Split(kv, "=")
 		// 判断标签格式正不正确
 		if 2 != len(t4s5kv) {
-			return nil, F8NewErrInvalidTagContent(kv)
+			return nil, internal.F8NewErrInvalidTagContent(kv)
 		}
 		m3tag[t4s5kv[0]] = t4s5kv[1]
 	}

@@ -1,5 +1,7 @@
 package v20
 
+import "orm-go/v20/internal"
+
 type S6SubQuery struct {
 	s5Select []i9SelectExpr
 	i9From   i9TableReference
@@ -36,7 +38,7 @@ func (this S6SubQuery) f8BuildTableReference(p7s6Builder *s6QueryBuilder) error 
 
 func (this S6SubQuery) f8CheckColumn(p7s6Builder *s6QueryBuilder, s6Column S6Column) (string, error) {
 	var columnName string = ""
-	var err error = f8NewErrUnknowStructField(s6Column.fieldName)
+	var err error = internal.F8NewErrUnknownField(s6Column.fieldName)
 
 	if 0 < len(this.s5Select) {
 		// 如果设置了查询表达式，就校验在不在设置的查询表达式里

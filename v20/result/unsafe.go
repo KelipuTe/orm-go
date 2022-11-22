@@ -2,6 +2,7 @@ package result
 
 import (
 	"database/sql"
+	"orm-go/v20/internal"
 	"orm-go/v20/metadata"
 	"reflect"
 	"unsafe"
@@ -21,7 +22,7 @@ type s6ResultUseUnsafe struct {
 func (p7this s6ResultUseUnsafe) F8GetField(name string) (any, error) {
 	fd, ok := p7this.p7s6Model.M3FieldToColumn[name]
 	if !ok {
-		return nil, F8NewErrUnknownColumn(name)
+		return nil, internal.F8NewErrUnknownColumn(name)
 	}
 	ptr := unsafe.Pointer(uintptr(p7this.p7pointer) + fd.Offset)
 	val := reflect.NewAt(fd.I9Type, ptr).Elem()
@@ -35,7 +36,7 @@ func (p7this s6ResultUseUnsafe) F8SetField(rows *sql.Rows) error {
 		return err
 	}
 	if len(s5ColumnName) > len(p7this.p7s6Model.M3ColumnToField) {
-		return ErrTooManyReturnedColumns
+		return internal.ErrTooManyReturnedColumns
 	}
 
 	s5ColumnValue := make([]any, len(s5ColumnName))
@@ -43,7 +44,7 @@ func (p7this s6ResultUseUnsafe) F8SetField(rows *sql.Rows) error {
 		// 通过数据库列名找到对应的结构体属性
 		p7s6ModelField, ok := p7this.p7s6Model.M3ColumnToField[t4ColumnName]
 		if !ok {
-			return F8NewErrUnknownColumn(t4ColumnName)
+			return internal.F8NewErrUnknownColumn(t4ColumnName)
 		}
 		// 通过结构体属性的内存偏移量，找到结构体属性的位置
 		t4p7pointer := unsafe.Pointer(uintptr(p7this.p7pointer) + p7s6ModelField.Offset)
