@@ -606,7 +606,7 @@ func TestSelectPartRaw(p7s6t *testing.T) {
 		{
 			name: "select_part_raw",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
-				F8Select(NewS6PartRaw("DISTINCT(`id`)")),
+				F8Select(F8NewS6PartRaw("DISTINCT(`id`)")),
 			wantQuery: &S6Query{
 				SQLString: "SELECT DISTINCT(`id`) FROM `app_user`;",
 				S5Value:   nil,
@@ -615,7 +615,7 @@ func TestSelectPartRaw(p7s6t *testing.T) {
 		{
 			name: "where_part_raw",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
-				F8Where(NewS6PartRaw("`id` > ?", 11).F8ToWhereCondition()),
+				F8Where(F8NewS6PartRaw("`id` > ?", 11).F8ToWhereCondition()),
 			wantQuery: &S6Query{
 				SQLString: "SELECT * FROM `app_user` WHERE `id` > ?;",
 				S5Value:   []any{11},
@@ -624,7 +624,7 @@ func TestSelectPartRaw(p7s6t *testing.T) {
 		{
 			name: "where_part_raw_and_one",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
-				F8Where(NewS6PartRaw("`id` > ?", 11).F8ToWhereCondition().
+				F8Where(F8NewS6PartRaw("`id` > ?", 11).F8ToWhereCondition().
 					F8And(F8NewS6Column("Name").F8Equal("aa"))),
 			wantQuery: &S6Query{
 				SQLString: "SELECT * FROM `app_user` WHERE (`id` > ?) AND (`name` = ?);",
@@ -635,7 +635,7 @@ func TestSelectPartRaw(p7s6t *testing.T) {
 			name: "having_part_raw",
 			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
 				F8GroupBy(F8NewS6Column("Age")).
-				F8Having(NewS6PartRaw("COUNT(`id`) > ?", 5).F8ToWhereCondition()),
+				F8Having(F8NewS6PartRaw("COUNT(`id`) > ?", 5).F8ToWhereCondition()),
 			wantQuery: &S6Query{
 				SQLString: "SELECT * FROM `app_user` GROUP BY `age` HAVING COUNT(`id`) > ?;",
 				S5Value:   []any{5},

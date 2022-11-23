@@ -47,12 +47,23 @@ func (this S6Column) f8BuildColumn(p7s6Builder *s6QueryBuilder, isUseAlias bool)
 	return nil
 }
 
-// F8As 给列设置别名
 func (this S6Column) F8As(alias string) S6Column {
 	return S6Column{
 		i9From:    this.i9From,
 		fieldName: this.fieldName,
 		alias:     alias,
+	}
+}
+
+func (this S6Column) ToAssignment(input any) S6Assignment {
+	i9Expr, ok := input.(i9Expression)
+	if !ok {
+		i9Expr = S6Value{Value: input}
+	}
+
+	return S6Assignment{
+		s6Column: this,
+		i9Expr:   i9Expr,
 	}
 }
 
@@ -72,7 +83,7 @@ func (this S6Column) f8BuildExpression(p7s6Builder *s6QueryBuilder) error {
 	return this.f8BuildColumn(p7s6Builder, false)
 }
 
-func (this S6Column) F8BuildAssignment() error { return nil }
+func (this S6Column) f8BuildAssignment() error { return nil }
 
 func (this S6Column) F8Equal(p any) S6WhereCondition {
 	return S6WhereCondition{
@@ -106,8 +117,17 @@ func (this S6Column) F8InQuery(sub S6SubQuery) S6WhereCondition {
 	}
 }
 
+func (this S6Column) F8Add(num any) S6MathExpression {
+	return S6MathExpression{
+		i9LeftExpr:  this,
+		s6Operator:  c5OperatorAdd,
+		i9RightExpr: f8NewI9Expression(num),
+	}
+}
+
 func F8NewS6Column(name string) S6Column {
 	return S6Column{
+		i9From:    nil,
 		fieldName: name,
 		alias:     "",
 	}

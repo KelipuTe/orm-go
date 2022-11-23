@@ -17,15 +17,15 @@ type S6Insert[T any] struct {
 	s6QueryBuilder
 }
 
-func (p7this *S6Insert[T]) F8SetValue(s5value ...*T) *S6Insert[T] {
-	if 0 >= len(s5value) {
+func (p7this *S6Insert[T]) F8SetEntity(s5Entity ...*T) *S6Insert[T] {
+	if 0 >= len(s5Entity) {
 		return p7this
 	}
 	if nil == p7this.s5p7Entity {
-		p7this.s5p7Entity = s5value
+		p7this.s5p7Entity = s5Entity
 		return p7this
 	}
-	p7this.s5p7Entity = append(p7this.s5p7Entity, s5value...)
+	p7this.s5p7Entity = append(p7this.s5p7Entity, s5Entity...)
 	return p7this
 }
 
@@ -87,6 +87,7 @@ func (p7this *S6Insert[T]) F8BuildQuery() (*S6Query, error) {
 		if 0 < i {
 			p7this.s6QueryBuilder.sqlString.WriteByte(',')
 		}
+		// 通过反射拿到结构体属性的值
 		t4i9result := p7this.f8NewI9Result(t4value, p7this.p7s6Model)
 		p7this.s6QueryBuilder.sqlString.WriteByte('(')
 		for j, t4value2 := range s5p7s6ModelField {
@@ -120,17 +121,17 @@ func (p7this *S6Insert[T]) F8BuildQuery() (*S6Query, error) {
 	}, nil
 }
 
-// 跳到中间 builder，处理 OnConflict 的内容
-func (p7this *S6Insert[T]) f8OnConflictBuilder() *S6ConflictBuilder[T] {
+// F8OnConflictBuilder 跳到中间 builder，处理 OnConflict 的内容
+func (p7this *S6Insert[T]) F8OnConflictBuilder() *S6ConflictBuilder[T] {
 	return &S6ConflictBuilder[T]{
 		p7s6Insert: p7this,
 	}
 }
 
-func F8NewS6Insert[T any](i9session I9Session) *S6Insert[T] {
-	t4p7s6monitor := i9session.f8GetS6Monitor()
+func F8NewS6Insert[T any](i9Session I9Session) *S6Insert[T] {
+	t4p7s6monitor := i9Session.f8GetS6Monitor()
 	return &S6Insert[T]{
-		i9Session: i9session,
+		i9Session: i9Session,
 		s6QueryBuilder: s6QueryBuilder{
 			s6Monitor: t4p7s6monitor,
 			quote:     t4p7s6monitor.i9Dialect.f8GetQuoter(),

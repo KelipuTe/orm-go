@@ -42,7 +42,7 @@ func (this S6PartRaw) F8ToWhereCondition() S6WhereCondition {
 	}
 }
 
-func NewS6PartRaw(sql string, s5Value ...any) S6PartRaw {
+func F8NewS6PartRaw(sql string, s5Value ...any) S6PartRaw {
 	return S6PartRaw{
 		sqlString: sql,
 		s5Value:   s5Value,

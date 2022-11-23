@@ -40,9 +40,13 @@ func (p7this *s6MySQLDialect) f8BuildOnConflict(p7s6Builder *s6QueryBuilder, p7s
 			p7s6Builder.f8WrapWithQuote(p7s6ModelField.ColumnName)
 			p7s6Builder.sqlString.WriteString(")")
 		case S6Assignment:
-			p7s6Builder.f8WrapWithQuote(t4value2.Name)
-			p7s6Builder.sqlString.WriteString("=")
-			return p7s6Builder.f8BuildExpression(t4value2.Expr)
+			p7s6ModelField, ok := p7s6Builder.p7s6Model.M3FieldToColumn[t4value2.s6Column.fieldName]
+			if !ok {
+				return internal.F8NewErrUnknownField(t4value2.s6Column.fieldName)
+			}
+			p7s6Builder.f8WrapWithQuote(p7s6ModelField.ColumnName)
+			p7s6Builder.sqlString.WriteByte('=')
+			return p7s6Builder.f8BuildExpression(t4value2.i9Expr)
 		default:
 			return internal.NewErrUnsupportedExpressionType(t4value2)
 		}
@@ -92,9 +96,13 @@ func (p7this *s6SQLite3Dialect) f8BuildOnConflict(p7s6Builder *s6QueryBuilder, p
 			p7s6Builder.sqlString.WriteString("=excluded.")
 			p7s6Builder.f8WrapWithQuote(p7s6ModelField.ColumnName)
 		case S6Assignment:
-			p7s6Builder.f8WrapWithQuote(t4value2.Name)
-			p7s6Builder.sqlString.WriteString("=")
-			return p7s6Builder.f8BuildExpression(t4value2.Expr)
+			p7s6ModelField, ok := p7s6Builder.p7s6Model.M3FieldToColumn[t4value2.s6Column.fieldName]
+			if !ok {
+				return internal.F8NewErrUnknownField(t4value2.s6Column.fieldName)
+			}
+			p7s6Builder.f8WrapWithQuote(p7s6ModelField.ColumnName)
+			p7s6Builder.sqlString.WriteByte('=')
+			return p7s6Builder.f8BuildExpression(t4value2.i9Expr)
 		default:
 			return internal.NewErrUnsupportedExpressionType(t4value2)
 		}

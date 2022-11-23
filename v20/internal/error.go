@@ -27,6 +27,8 @@ func F8NewErrUnknownColumn(column string) error {
 
 var ErrNoRows = errors.New("orm: 未找到数据")
 var ErrTooManyReturnedColumns = errors.New("orm: 返回的列过多")
+var ErrEmptyUpdateColumn = errors.New("未设置更新的列")
+var ErrUpdateWithoutWhere = errors.New("更新没有where")
 
 // #### ORM ####
 

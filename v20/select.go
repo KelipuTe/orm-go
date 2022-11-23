@@ -268,10 +268,10 @@ func (p7this *S6Select[T]) F8AsSubQuery(alias string) S6SubQuery {
 	}
 }
 
-func F8NewS6Select[T any](i9session I9Session) *S6Select[T] {
-	t4p7s6monitor := i9session.f8GetS6Monitor()
+func F8NewS6Select[T any](i9Session I9Session) *S6Select[T] {
+	t4p7s6monitor := i9Session.f8GetS6Monitor()
 	return &S6Select[T]{
-		i9session: i9session,
+		i9session: i9Session,
 		s6QueryBuilder: s6QueryBuilder{
 			s6Monitor: t4p7s6monitor,
 			quote:     t4p7s6monitor.i9Dialect.f8GetQuoter(),
