@@ -46,8 +46,11 @@ func (p7this *S6Update[T]) F8Where(s5condition ...S6WhereCondition) *S6Update[T]
 func (p7this *S6Update[T]) F8BuildQuery() (*S6Query, error) {
 	var err error
 
+	if nil == p7this.p7Entity {
+		p7this.p7Entity = new(T)
+	}
 	if 0 >= len(p7this.s5i9Assignment) {
-		return nil, internal.ErrEmptyUpdateColumn
+		return nil, internal.ErrUpdateWithoutColumn
 	}
 	if 0 >= len(p7this.s5where) {
 		return nil, internal.ErrUpdateWithoutWhere

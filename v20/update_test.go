@@ -16,11 +16,11 @@ func TestUpdateBuild(p7s6t *testing.T) {
 		wantErr   error
 	}{
 		{
-			name: "update_empty_update",
+			name: "update_without_column",
 			i9Builder: F8NewS6Update[S6APPUserModel](p7s6DB).
 				F8SetEntity(&S6APPUserModel{Id: 11, Name: "aa", Age: 22, Sex: 1}),
 			wantQuery: nil,
-			wantErr:   internal.ErrEmptyUpdateColumn,
+			wantErr:   internal.ErrUpdateWithoutColumn,
 		},
 		{
 			name: "update_without_where",
@@ -75,6 +75,17 @@ func TestUpdateBuild(p7s6t *testing.T) {
 			wantQuery: &S6Query{
 				SQLString: "UPDATE `app_user` SET `age`=`age`+1 WHERE `id` = ?;",
 				S5Value:   []any{11},
+			},
+			wantErr: nil,
+		},
+		{
+			name: "update_one_without_entity",
+			i9Builder: F8NewS6Update[S6APPUserModel](p7s6DB).
+				F8SetUpdate(F8NewS6Column("Name").ToAssignment("bb")).
+				F8Where(F8NewS6Column("Id").F8Equal(11)),
+			wantQuery: &S6Query{
+				SQLString: "UPDATE `app_user` SET `name`=? WHERE `id` = ?;",
+				S5Value:   []any{"bb", 11},
 			},
 			wantErr: nil,
 		},

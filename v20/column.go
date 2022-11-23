@@ -1,6 +1,9 @@
 package v20
 
-import "orm-go/v20/internal"
+import (
+	"fmt"
+	"orm-go/v20/internal"
+)
 
 // S6Column 对应 col_name
 // 即语句中表示[表、JOIN、子查询]中列的部分
@@ -106,6 +109,14 @@ func (this S6Column) F8LessThan(p any) S6WhereCondition {
 		i9LeftExpr:  this,
 		s6Operator:  c5OperatorLessThan,
 		i9RightExpr: f8NewI9Expression(p),
+	}
+}
+
+func (this S6Column) F8Like(p any) S6WhereCondition {
+	return S6WhereCondition{
+		i9LeftExpr:  this,
+		s6Operator:  c5OperatorLike,
+		i9RightExpr: F8NewS6PartRaw(fmt.Sprintf("'%s'", p)),
 	}
 }
 

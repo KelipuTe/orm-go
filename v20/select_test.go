@@ -200,6 +200,15 @@ func TestSelectWhere(p7s6t *testing.T) {
 				S5Value:   []any{11, "aa"},
 			},
 		},
+		{
+			name: "where_one_like",
+			queryBuilder: F8NewS6Select[S6APPUserModel](p7s6DB).
+				F8Where(F8NewS6Column("Name").F8Like("%11%")),
+			wantQuery: &S6Query{
+				SQLString: "SELECT * FROM `app_user` WHERE `name` LIKE '%11%';",
+				S5Value:   nil,
+			},
+		},
 	}
 
 	for _, t4value := range s5s6case {
