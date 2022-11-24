@@ -3,9 +3,12 @@ package v20
 import "orm-go/v20/internal"
 
 type S6UpdateBuilder[T any] struct {
-	p7Entity       *T
+	// p7Entity 需要修改的实体，解析它得到元数据
+	p7Entity *T
+	// s5i9Assignment SET 后面的
 	s5i9Assignment []i9Assignment
-	s5where        []S6WhereCondition
+	// s5where WHERE 后面的
+	s5where []S6WhereCondition
 
 	i9Session I9Session
 	s6QueryBuilder

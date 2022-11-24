@@ -21,7 +21,7 @@ func (p7this *S6Tx) f8DoQueryContext(ctx context.Context, query string, args ...
 	return p7this.p7s6SqlTx.QueryContext(ctx, query, args...)
 }
 
-func (p7this *S6Tx) f8DoExecContext(ctx context.Context, query string, args ...any) (sql.Result, error) {
+func (p7this *S6Tx) f8DoEXECContext(ctx context.Context, query string, args ...any) (sql.Result, error) {
 	return p7this.p7s6SqlTx.ExecContext(ctx, query, args...)
 }
 

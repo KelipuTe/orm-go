@@ -7,14 +7,41 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"log"
 	v20 "orm-go/v20"
+	"orm-go/v20/middleware"
 )
 
 func main() {
-	testInsert()
+	testSelect()
+	testSlowSQL()
+	//testInsert()
 }
 
 func testSelect() {
+	p7s6SQLDB, err := sql.Open("mysql", "root:123456@tcp(127.0.0.1:13306)/golang_dev?charset=utf8")
+	if nil != err {
+		log.Fatalln(err)
+	}
+	p7s6DB := v20.F8NewS6DB(p7s6SQLDB, v20.F8DBWithMiddleware(middleware.SqlLogMiddlewareBuild()))
 
+	sqlResult, err := v20.F8NewS6SelectBuilder[v20.S6APPUserModel](p7s6DB).
+		F8Where(v20.F8NewS6Column("Id").F8Equal(11)).F8First(context.Background())
+	fmt.Println(sqlResult, err)
+}
+
+func testSlowSQL() {
+	p7s6SQLDB, err := sql.Open("mysql", "root:123456@tcp(127.0.0.1:13306)/golang_dev?charset=utf8")
+	if nil != err {
+		log.Fatalln(err)
+	}
+	p7s6DB := v20.F8NewS6DB(p7s6SQLDB, v20.F8DBWithMiddleware(
+		middleware.SqlLogMiddlewareBuild(),
+		middleware.SlowLogMiddlewareBuild(),
+		middleware.SlowLogTriggerMiddlewareBuild(),
+	))
+
+	sqlResult, err := v20.F8NewS6SelectBuilder[v20.S6APPUserModel](p7s6DB).
+		F8Where(v20.F8NewS6Column("Id").F8Equal(11)).F8First(context.Background())
+	fmt.Println(sqlResult, err)
 }
 
 func testInsert() {

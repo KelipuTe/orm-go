@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-// S6Query I9QueryBuilder.F8BuildQuery 的结果
+// S6Query 构造出来的查询语句和参数
 type S6Query struct {
 	// SQLString 带有占位符的 SQL 语句
 	SQLString string

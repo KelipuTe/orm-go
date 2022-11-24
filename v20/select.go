@@ -2,7 +2,6 @@ package v20
 
 import (
 	"context"
-	"orm-go/v20/internal"
 )
 
 // S6SelectBuilder 用于构造 SELECT 语句
@@ -24,7 +23,7 @@ type S6SelectBuilder[T any] struct {
 	// offset OFFSET 行数
 	offset int
 
-	i9session I9Session
+	i9Session I9Session
 	s6QueryBuilder
 }
 
@@ -227,30 +226,17 @@ func (p7this *S6SelectBuilder[T]) f8BuildSelect() error {
 
 // F8First 执行查询
 func (p7this *S6SelectBuilder[T]) F8First(i9ctx context.Context) (*T, error) {
-	p7s6query, _ := p7this.F8BuildQuery()
-
-	// 执行查询
-	rows, err := p7this.i9session.f8DoQueryContext(i9ctx, p7s6query.SQLString, p7s6query.S5Value...)
-	if nil != err {
-		return nil, err
+	p7s6Context := &S6QueryContext{
+		QueryType: "SELECT",
+		i9Builder: p7this,
+		p7s6Model: p7this.s6QueryBuilder.p7s6Model,
+		p7s6Query: nil,
 	}
-
-	// 处理数据库返回的查询结果
-	if !rows.Next() {
-		return nil, internal.ErrNoRows
+	p7s6Result := f8DoFirst[T](i9ctx, p7this.i9Session, &p7this.s6Monitor, p7s6Context)
+	if nil != p7s6Result.AnyResult {
+		return p7s6Result.AnyResult.(*T), p7s6Result.I9Err
 	}
-
-	// new 一个类型 T 的变量
-	t4p7T := new(T)
-	// 获取类型 T 对应的映射模型
-	t4s6model, err2 := p7this.i9session.f8GetS6Monitor().i9Registry.F8Get(t4p7T)
-	if nil != err2 {
-		return nil, err2
-	}
-	// 用数据库返回的查询结果构造结构体
-	t4result := p7this.i9session.f8GetS6Monitor().f8NewI9Result(t4p7T, t4s6model)
-	err4 := t4result.F8SetField(rows)
-	return t4p7T, err4
+	return nil, p7s6Result.I9Err
 }
 
 // F8AsSubQuery 构造子查询
@@ -271,7 +257,7 @@ func (p7this *S6SelectBuilder[T]) F8AsSubQuery(alias string) S6SubQuery {
 func F8NewS6SelectBuilder[T any](i9Session I9Session) *S6SelectBuilder[T] {
 	t4p7s6monitor := i9Session.f8GetS6Monitor()
 	return &S6SelectBuilder[T]{
-		i9session: i9Session,
+		i9Session: i9Session,
 		s6QueryBuilder: s6QueryBuilder{
 			s6Monitor: t4p7s6monitor,
 			quote:     t4p7s6monitor.i9Dialect.f8GetQuoter(),
