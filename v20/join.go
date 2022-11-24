@@ -19,7 +19,7 @@ func (this S6Join) f8GetTableReferenceAlies() string {
 }
 
 func (this S6Join) f8BuildTableReference(p7s6Builder *s6QueryBuilder) error {
-	var err error
+	var err error = nil
 
 	p7s6Builder.sqlString.WriteByte('(')
 

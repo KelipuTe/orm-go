@@ -14,7 +14,7 @@ var _ F8NewI9Result = F8NewS6ResultUseReflect
 type s6ResultUseReflect struct {
 	// s6Value 存储数据库返回的查询结果的结构体
 	s6Value reflect.Value
-	// p7s6Model orm 映射模型
+	// p7s6Model 映射模型
 	p7s6Model *metadata.S6Model
 }
 

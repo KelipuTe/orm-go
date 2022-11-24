@@ -2,7 +2,7 @@ package v20
 
 import "orm-go/v20/internal"
 
-type S6Delete[T any] struct {
+type S6DeleteBuilder[T any] struct {
 	p7Entity *T
 	s5where  []S6WhereCondition
 
@@ -10,7 +10,7 @@ type S6Delete[T any] struct {
 	s6QueryBuilder
 }
 
-func (p7this *S6Delete[T]) F8SetEntity(p7Entity *T) *S6Delete[T] {
+func (p7this *S6DeleteBuilder[T]) F8SetEntity(p7Entity *T) *S6DeleteBuilder[T] {
 	if nil == p7Entity {
 		return p7this
 	}
@@ -18,7 +18,7 @@ func (p7this *S6Delete[T]) F8SetEntity(p7Entity *T) *S6Delete[T] {
 	return p7this
 }
 
-func (p7this *S6Delete[T]) F8Where(s5condition ...S6WhereCondition) *S6Delete[T] {
+func (p7this *S6DeleteBuilder[T]) F8Where(s5condition ...S6WhereCondition) *S6DeleteBuilder[T] {
 	if 0 >= len(s5condition) {
 		return p7this
 	}
@@ -30,8 +30,8 @@ func (p7this *S6Delete[T]) F8Where(s5condition ...S6WhereCondition) *S6Delete[T]
 	return p7this
 }
 
-func (p7this *S6Delete[T]) F8BuildQuery() (*S6Query, error) {
-	var err error
+func (p7this *S6DeleteBuilder[T]) F8BuildQuery() (*S6Query, error) {
+	var err error = nil
 
 	if nil == p7this.p7Entity {
 		p7this.p7Entity = new(T)
@@ -62,9 +62,9 @@ func (p7this *S6Delete[T]) F8BuildQuery() (*S6Query, error) {
 	}, nil
 }
 
-func F8NewS6Delete[T any](i9Session I9Session) *S6Delete[T] {
+func F8NewS6DeleteBuilder[T any](i9Session I9Session) *S6DeleteBuilder[T] {
 	t4p7s6monitor := i9Session.f8GetS6Monitor()
-	return &S6Delete[T]{
+	return &S6DeleteBuilder[T]{
 		i9Session: i9Session,
 		s6QueryBuilder: s6QueryBuilder{
 			s6Monitor: t4p7s6monitor,

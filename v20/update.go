@@ -2,7 +2,7 @@ package v20
 
 import "orm-go/v20/internal"
 
-type S6Update[T any] struct {
+type S6UpdateBuilder[T any] struct {
 	p7Entity       *T
 	s5i9Assignment []i9Assignment
 	s5where        []S6WhereCondition
@@ -11,7 +11,7 @@ type S6Update[T any] struct {
 	s6QueryBuilder
 }
 
-func (p7this *S6Update[T]) F8SetEntity(p7Entity *T) *S6Update[T] {
+func (p7this *S6UpdateBuilder[T]) F8SetEntity(p7Entity *T) *S6UpdateBuilder[T] {
 	if nil == p7Entity {
 		return p7this
 	}
@@ -19,7 +19,7 @@ func (p7this *S6Update[T]) F8SetEntity(p7Entity *T) *S6Update[T] {
 	return p7this
 }
 
-func (p7this *S6Update[T]) F8SetUpdate(s5i9Assignment ...i9Assignment) *S6Update[T] {
+func (p7this *S6UpdateBuilder[T]) F8SetUpdate(s5i9Assignment ...i9Assignment) *S6UpdateBuilder[T] {
 	if 0 >= len(s5i9Assignment) {
 		return p7this
 	}
@@ -31,7 +31,7 @@ func (p7this *S6Update[T]) F8SetUpdate(s5i9Assignment ...i9Assignment) *S6Update
 	return p7this
 }
 
-func (p7this *S6Update[T]) F8Where(s5condition ...S6WhereCondition) *S6Update[T] {
+func (p7this *S6UpdateBuilder[T]) F8Where(s5condition ...S6WhereCondition) *S6UpdateBuilder[T] {
 	if 0 >= len(s5condition) {
 		return p7this
 	}
@@ -43,8 +43,8 @@ func (p7this *S6Update[T]) F8Where(s5condition ...S6WhereCondition) *S6Update[T]
 	return p7this
 }
 
-func (p7this *S6Update[T]) F8BuildQuery() (*S6Query, error) {
-	var err error
+func (p7this *S6UpdateBuilder[T]) F8BuildQuery() (*S6Query, error) {
+	var err error = nil
 
 	if nil == p7this.p7Entity {
 		p7this.p7Entity = new(T)
@@ -112,9 +112,9 @@ func (p7this *S6Update[T]) F8BuildQuery() (*S6Query, error) {
 	}, nil
 }
 
-func F8NewS6Update[T any](i9Session I9Session) *S6Update[T] {
+func F8NewS6UpdateBuilder[T any](i9Session I9Session) *S6UpdateBuilder[T] {
 	t4p7s6monitor := i9Session.f8GetS6Monitor()
-	return &S6Update[T]{
+	return &S6UpdateBuilder[T]{
 		i9Session: i9Session,
 		s6QueryBuilder: s6QueryBuilder{
 			s6Monitor: t4p7s6monitor,

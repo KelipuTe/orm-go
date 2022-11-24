@@ -6,7 +6,7 @@ type S6Conflict struct {
 }
 
 type S6ConflictBuilder[T any] struct {
-	p7s6Insert       *S6Insert[T]
+	p7s6Insert       *S6InsertBuilder[T]
 	S5ConflictColumn []S6Column
 }
 
@@ -15,7 +15,7 @@ func (p7this *S6ConflictBuilder[T]) F8ConflictColumn(s5column ...S6Column) *S6Co
 	return p7this
 }
 
-func (p7this *S6ConflictBuilder[T]) F8SetUpdate(s5i9assignment ...i9Assignment) *S6Insert[T] {
+func (p7this *S6ConflictBuilder[T]) F8SetUpdate(s5i9assignment ...i9Assignment) *S6InsertBuilder[T] {
 	p7this.p7s6Insert.p7s6Conflict = &S6Conflict{
 		S5ConflictColumn: p7this.S5ConflictColumn,
 		S5Assignment:     s5i9assignment,

@@ -10,7 +10,7 @@ type s6BinaryExpression struct {
 }
 
 func (this s6BinaryExpression) f8BuildExpression(p7s6Builder *s6QueryBuilder) error {
-	var err error
+	var err error = nil
 
 	if nil != this.i9LeftExpr {
 		_, lIsP := this.i9LeftExpr.(S6WhereCondition)

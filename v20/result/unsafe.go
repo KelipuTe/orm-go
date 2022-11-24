@@ -15,7 +15,7 @@ var _ F8NewI9Result = F8NewS6ResultUseUnsafe
 type s6ResultUseUnsafe struct {
 	// p7pointer 存储数据库返回的查询结果的结构体的起始地址
 	p7pointer unsafe.Pointer
-	// p7s6Model orm 映射模型
+	// p7s6Model 映射模型
 	p7s6Model *metadata.S6Model
 }
 

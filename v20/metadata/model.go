@@ -15,7 +15,7 @@ type I9TableName interface {
 	F8TableName() string
 }
 
-// S6Model orm 映射模型
+// S6Model 映射模型
 // 处理结构体属性和数据库列名的互相转换
 type S6Model struct {
 	// TableName 结构体对应的表名
@@ -28,7 +28,10 @@ type S6Model struct {
 	S5P7S6ModelField []*S6ModelField
 }
 
-// S6ModelField orm 映射模型的每个属性
+// F8S6ModelOption 方法抽象：针对 S6Model 的 Option 设计模式
+type F8S6ModelOption func(p7s6om *S6Model) error
+
+// S6ModelField 映射模型的每个属性
 type S6ModelField struct {
 	// FieldName 结构体属性名
 	FieldName string

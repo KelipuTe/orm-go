@@ -17,13 +17,13 @@ func TestDeleteBuild(p7s6t *testing.T) {
 	}{
 		{
 			name:      "delete_without_where",
-			i9Builder: F8NewS6Delete[S6APPUserModel](p7s6DB),
+			i9Builder: F8NewS6DeleteBuilder[S6APPUserModel](p7s6DB),
 			wantQuery: nil,
 			wantErr:   internal.ErrDeleteWithoutWhere,
 		},
 		{
 			name: "delete_one",
-			i9Builder: F8NewS6Delete[S6APPUserModel](p7s6DB).
+			i9Builder: F8NewS6DeleteBuilder[S6APPUserModel](p7s6DB).
 				F8Where(F8NewS6Column("Id").F8Equal(11)),
 			wantQuery: &S6Query{
 				SQLString: "DELETE FROM `app_user` WHERE `id` = ?;",

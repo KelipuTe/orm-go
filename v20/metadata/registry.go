@@ -10,9 +10,6 @@ import (
 
 // #### type ####
 
-// F8S6ModelOption 方法抽象：针对 S6Model 的 Option 设计模式
-type F8S6ModelOption func(p7s6om *S6Model) error
-
 // I9Registry 元数据注册中心抽象
 type I9Registry interface {
 	// F8Get 查找元数据
@@ -23,7 +20,7 @@ type I9Registry interface {
 
 // S6Registry 元数据注册中心：实现 I9Registry 接口
 type S6Registry struct {
-	// m3Model map：解析好的 orm 映射模型
+	// m3Model map：解析好的映射模型
 	// 这里可以预见会出现并发操作，所以用 sync.Map
 	m3Model sync.Map
 }
@@ -64,7 +61,7 @@ func (p7this *S6Registry) F8Get(p7s6Struct any) (*S6Model, error) {
 	if ok {
 		return value.(*S6Model), nil
 	}
-	// 否则需要解析并注册 orm 映射模型
+	// 否则需要解析并注册映射模型
 	return p7this.F8Register(p7s6Struct)
 }
 
@@ -80,7 +77,7 @@ func (p7this *S6Registry) F8Register(p7s6Struct any, s5f8Option ...F8S6ModelOpti
 			return nil, err
 		}
 	}
-	// 注册 orm 映射模型
+	// 注册映射模型
 	i9type := reflect.TypeOf(p7s6Struct)
 	p7this.m3Model.Store(i9type.String(), p7s6om)
 	return p7s6om, nil

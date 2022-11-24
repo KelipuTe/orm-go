@@ -1,11 +1,13 @@
 package v20
 
 import (
+	"context"
+	"database/sql"
 	"orm-go/v20/internal"
 	"orm-go/v20/metadata"
 )
 
-type S6Insert[T any] struct {
+type S6InsertBuilder[T any] struct {
 	// s5p7Entity 代表要插入的数据
 	s5p7Entity []*T
 	// s5FieldName 结构体属性名，代表要插入的字段
@@ -17,7 +19,7 @@ type S6Insert[T any] struct {
 	s6QueryBuilder
 }
 
-func (p7this *S6Insert[T]) F8SetEntity(s5Entity ...*T) *S6Insert[T] {
+func (p7this *S6InsertBuilder[T]) F8SetEntity(s5Entity ...*T) *S6InsertBuilder[T] {
 	if 0 >= len(s5Entity) {
 		return p7this
 	}
@@ -29,7 +31,7 @@ func (p7this *S6Insert[T]) F8SetEntity(s5Entity ...*T) *S6Insert[T] {
 	return p7this
 }
 
-func (p7this *S6Insert[T]) F8SetField(s5FieldName ...string) *S6Insert[T] {
+func (p7this *S6InsertBuilder[T]) F8SetField(s5FieldName ...string) *S6InsertBuilder[T] {
 	if 0 >= len(s5FieldName) {
 		return p7this
 	}
@@ -41,8 +43,8 @@ func (p7this *S6Insert[T]) F8SetField(s5FieldName ...string) *S6Insert[T] {
 	return p7this
 }
 
-func (p7this *S6Insert[T]) F8BuildQuery() (*S6Query, error) {
-	var err error
+func (p7this *S6InsertBuilder[T]) F8BuildQuery() (*S6Query, error) {
+	var err error = nil
 
 	p7this.s6QueryBuilder.p7s6Model, err = p7this.s6Monitor.i9Registry.F8Get(p7this.s5p7Entity[0])
 	if nil != err {
@@ -122,19 +124,30 @@ func (p7this *S6Insert[T]) F8BuildQuery() (*S6Query, error) {
 }
 
 // F8OnConflictBuilder 跳到中间 builder，处理 OnConflict 的内容
-func (p7this *S6Insert[T]) F8OnConflictBuilder() *S6ConflictBuilder[T] {
+func (p7this *S6InsertBuilder[T]) F8OnConflictBuilder() *S6ConflictBuilder[T] {
 	return &S6ConflictBuilder[T]{
 		p7s6Insert: p7this,
 	}
 }
 
-func F8NewS6Insert[T any](i9Session I9Session) *S6Insert[T] {
-	t4p7s6monitor := i9Session.f8GetS6Monitor()
-	return &S6Insert[T]{
+func (p7this *S6InsertBuilder[T]) F8EXEC(ctx context.Context) (sql.Result, error) {
+	p7s6Context := &S6QueryContext{
+		QueryType: "INSERT",
+		i9Builder: p7this,
+		p7s6Model: p7this.s6QueryBuilder.p7s6Model,
+		p7s6Query: nil,
+	}
+	p7s6Result := f8DoEXEC(ctx, p7this.i9Session, &p7this.s6Monitor, p7s6Context)
+	return p7s6Result.I9SQLResult, p7s6Result.I9Err
+}
+
+func F8NewS6InsertBuilder[T any](i9Session I9Session) *S6InsertBuilder[T] {
+	p7s6monitor := i9Session.f8GetS6Monitor()
+	return &S6InsertBuilder[T]{
 		i9Session: i9Session,
 		s6QueryBuilder: s6QueryBuilder{
-			s6Monitor: t4p7s6monitor,
-			quote:     t4p7s6monitor.i9Dialect.f8GetQuoter(),
+			s6Monitor: p7s6monitor,
+			quote:     p7s6monitor.i9Dialect.f8GetQuoter(),
 		},
 	}
 }

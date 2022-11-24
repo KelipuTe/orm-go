@@ -16,7 +16,7 @@ func TestInsertBuildMySQL(p7s6t *testing.T) {
 	}{
 		{
 			name: "insert_one",
-			i9Builder: F8NewS6Insert[S6APPUserModel](p7s6DB).
+			i9Builder: F8NewS6InsertBuilder[S6APPUserModel](p7s6DB).
 				F8SetEntity(&S6APPUserModel{Id: 11, Name: "aa", Age: 22, Sex: 1}),
 			wantQuery: &S6Query{
 				SQLString: "INSERT INTO `app_user`(`id`,`name`,`age`,`sex`) VALUES(?,?,?,?);",
@@ -26,7 +26,7 @@ func TestInsertBuildMySQL(p7s6t *testing.T) {
 		},
 		{
 			name: "insert_two",
-			i9Builder: F8NewS6Insert[S6APPUserModel](p7s6DB).
+			i9Builder: F8NewS6InsertBuilder[S6APPUserModel](p7s6DB).
 				F8SetEntity(
 					&S6APPUserModel{Id: 11, Name: "aa", Age: 22, Sex: 1},
 					&S6APPUserModel{Id: 22, Name: "bb", Age: 33, Sex: 2},
@@ -39,7 +39,7 @@ func TestInsertBuildMySQL(p7s6t *testing.T) {
 		},
 		{
 			name: "insert_one_set_column",
-			i9Builder: F8NewS6Insert[S6APPUserModel](p7s6DB).
+			i9Builder: F8NewS6InsertBuilder[S6APPUserModel](p7s6DB).
 				F8SetEntity(&S6APPUserModel{Id: 11, Name: "aa", Age: 22, Sex: 1}).
 				F8SetField("Id", "Name"),
 			wantQuery: &S6Query{
@@ -50,22 +50,22 @@ func TestInsertBuildMySQL(p7s6t *testing.T) {
 		},
 		{
 			name: "insert_one_on_conflict_update_with_column",
-			i9Builder: F8NewS6Insert[S6APPUserModel](p7s6DB).
+			i9Builder: F8NewS6InsertBuilder[S6APPUserModel](p7s6DB).
 				F8SetEntity(&S6APPUserModel{Id: 11, Name: "aa", Age: 22, Sex: 1}).
 				F8OnConflictBuilder().
-				F8SetUpdate(F8NewS6Column("Id"), F8NewS6Column("Name")),
+				F8SetUpdate(F8NewS6Column("Name"), F8NewS6Column("Age")),
 			wantQuery: &S6Query{
-				SQLString: "INSERT INTO `app_user`(`id`,`name`,`age`,`sex`) VALUES(?,?,?,?) ON DUPLICATE KEY UPDATE `id`=VALUES(`id`),`name`=VALUES(`name`);",
+				SQLString: "INSERT INTO `app_user`(`id`,`name`,`age`,`sex`) VALUES(?,?,?,?) ON DUPLICATE KEY UPDATE `name`=VALUES(`name`),`age`=VALUES(`age`);",
 				S5Value:   []any{11, "aa", int8(22), int8(1)},
 			},
 			wantErr: nil,
 		},
 		{
 			name: "insert_one_on_conflict_update_with_value",
-			i9Builder: F8NewS6Insert[S6APPUserModel](p7s6DB).
+			i9Builder: F8NewS6InsertBuilder[S6APPUserModel](p7s6DB).
 				F8SetEntity(&S6APPUserModel{Id: 11, Name: "aa", Age: 22, Sex: 1}).
 				F8OnConflictBuilder().
-				F8SetUpdate(F8NewS6Column("Name").ToAssignment("bb")),
+				F8SetUpdate(F8NewS6Column("Name").ToAssignment("aaaa")),
 			wantQuery: &S6Query{
 				SQLString: "INSERT INTO `app_user`(`id`,`name`,`age`,`sex`) VALUES(?,?,?,?) ON DUPLICATE KEY UPDATE `name`=?;",
 				S5Value:   []any{11, "aa", int8(22), int8(1), "bb"},
@@ -97,7 +97,7 @@ func TestInsertBuildSQLite3(p7s6t *testing.T) {
 	}{
 		{
 			name: "insert_one_on_conflict_update_with_column",
-			queryBuilder: F8NewS6Insert[S6APPUserModel](p7s6DB).
+			queryBuilder: F8NewS6InsertBuilder[S6APPUserModel](p7s6DB).
 				F8SetEntity(&S6APPUserModel{Id: 11, Name: "aa", Age: 22, Sex: 1}).
 				F8OnConflictBuilder().
 				F8ConflictColumn(F8NewS6Column("Id")).
@@ -110,7 +110,7 @@ func TestInsertBuildSQLite3(p7s6t *testing.T) {
 		},
 		{
 			name: "insert_one_on_conflict_update_with_value",
-			queryBuilder: F8NewS6Insert[S6APPUserModel](p7s6DB).
+			queryBuilder: F8NewS6InsertBuilder[S6APPUserModel](p7s6DB).
 				F8SetEntity(&S6APPUserModel{Id: 11, Name: "aa", Age: 22, Sex: 1}).
 				F8OnConflictBuilder().
 				F8ConflictColumn(F8NewS6Column("Id")).

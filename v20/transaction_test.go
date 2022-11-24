@@ -9,7 +9,7 @@ import (
 )
 
 func TestS6TxF8Commit(p7s6t *testing.T) {
-	var err error
+	var err error = nil
 
 	// 构造 mock 数据库连接
 	p7s6MockDB, sqlMock, err := sqlmock.New()
@@ -32,7 +32,7 @@ func TestS6TxF8Commit(p7s6t *testing.T) {
 }
 
 func TestS6TxF8RollBack(p7s6t *testing.T) {
-	var err error
+	var err error = nil
 
 	// 构造 mock 数据库连接
 	p7s6MockDB, sqlMock, err := sqlmock.New()

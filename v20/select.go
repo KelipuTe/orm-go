@@ -5,8 +5,8 @@ import (
 	"orm-go/v20/internal"
 )
 
-// S6Select 用于构造 SELECT 语句
-type S6Select[T any] struct {
+// S6SelectBuilder 用于构造 SELECT 语句
+type S6SelectBuilder[T any] struct {
 	// s5select SELECT 后面的
 	s5select []i9SelectExpr
 	// i9from FROM 后面的
@@ -29,7 +29,7 @@ type S6Select[T any] struct {
 }
 
 // F8Select 添加查询子句
-func (p7this *S6Select[T]) F8Select(s5expr ...i9SelectExpr) *S6Select[T] {
+func (p7this *S6SelectBuilder[T]) F8Select(s5expr ...i9SelectExpr) *S6SelectBuilder[T] {
 	if 0 >= len(s5expr) {
 		return p7this
 	}
@@ -42,7 +42,7 @@ func (p7this *S6Select[T]) F8Select(s5expr ...i9SelectExpr) *S6Select[T] {
 }
 
 // F8Where 添加 where 子句
-func (p7this *S6Select[T]) F8Where(s5condition ...S6WhereCondition) *S6Select[T] {
+func (p7this *S6SelectBuilder[T]) F8Where(s5condition ...S6WhereCondition) *S6SelectBuilder[T] {
 	if 0 >= len(s5condition) {
 		return p7this
 	}
@@ -55,7 +55,7 @@ func (p7this *S6Select[T]) F8Where(s5condition ...S6WhereCondition) *S6Select[T]
 }
 
 // F8GroupBy 添加 group by 子句
-func (p7this *S6Select[T]) F8GroupBy(s5column ...S6Column) *S6Select[T] {
+func (p7this *S6SelectBuilder[T]) F8GroupBy(s5column ...S6Column) *S6SelectBuilder[T] {
 	if 0 >= len(s5column) {
 		return p7this
 	}
@@ -68,7 +68,7 @@ func (p7this *S6Select[T]) F8GroupBy(s5column ...S6Column) *S6Select[T] {
 }
 
 // F8Having 添加 having 子句
-func (p7this *S6Select[T]) F8Having(s5condition ...S6WhereCondition) *S6Select[T] {
+func (p7this *S6SelectBuilder[T]) F8Having(s5condition ...S6WhereCondition) *S6SelectBuilder[T] {
 	if 0 >= len(s5condition) {
 		return p7this
 	}
@@ -81,7 +81,7 @@ func (p7this *S6Select[T]) F8Having(s5condition ...S6WhereCondition) *S6Select[T
 }
 
 // F8OrderBy 添加 order by 子句
-func (p7this *S6Select[T]) F8OrderBy(s5OrderBy ...S6OrderBy) *S6Select[T] {
+func (p7this *S6SelectBuilder[T]) F8OrderBy(s5OrderBy ...S6OrderBy) *S6SelectBuilder[T] {
 	if 0 >= len(s5OrderBy) {
 		return p7this
 	}
@@ -94,24 +94,24 @@ func (p7this *S6Select[T]) F8OrderBy(s5OrderBy ...S6OrderBy) *S6Select[T] {
 }
 
 // F8Limit 添加 LIMIT 行数
-func (p7this *S6Select[T]) F8Limit(rowCount int) *S6Select[T] {
+func (p7this *S6SelectBuilder[T]) F8Limit(rowCount int) *S6SelectBuilder[T] {
 	p7this.limit = rowCount
 	return p7this
 }
 
 // F8Offset 添加 OFFSET 行数
-func (p7this *S6Select[T]) F8Offset(rowCount int) *S6Select[T] {
+func (p7this *S6SelectBuilder[T]) F8Offset(rowCount int) *S6SelectBuilder[T] {
 	p7this.offset = rowCount
 	return p7this
 }
 
-func (p7this *S6Select[T]) F8From(i9reference i9TableReference) *S6Select[T] {
+func (p7this *S6SelectBuilder[T]) F8From(i9reference i9TableReference) *S6SelectBuilder[T] {
 	p7this.i9from = i9reference
 	return p7this
 }
 
-func (p7this *S6Select[T]) F8BuildQuery() (*S6Query, error) {
-	var err error
+func (p7this *S6SelectBuilder[T]) F8BuildQuery() (*S6Query, error) {
+	var err error = nil
 
 	p7this.s6QueryBuilder.p7s6Model, err = p7this.s6Monitor.i9Registry.F8Get(new(T))
 	if nil != err {
@@ -199,7 +199,7 @@ func (p7this *S6Select[T]) F8BuildQuery() (*S6Query, error) {
 	return p7s6query, nil
 }
 
-func (p7this *S6Select[T]) f8BuildTableReference(reference i9TableReference) error {
+func (p7this *S6SelectBuilder[T]) f8BuildTableReference(reference i9TableReference) error {
 	if nil == reference {
 		p7this.f8WrapWithQuote(p7this.p7s6Model.TableName)
 		return nil
@@ -208,7 +208,7 @@ func (p7this *S6Select[T]) f8BuildTableReference(reference i9TableReference) err
 }
 
 // f8BuildSelect 处理 SELECT 后面的
-func (p7this *S6Select[T]) f8BuildSelect() error {
+func (p7this *S6SelectBuilder[T]) f8BuildSelect() error {
 	if 0 >= len(p7this.s5select) {
 		p7this.sqlString.WriteByte('*')
 		return nil
@@ -226,7 +226,7 @@ func (p7this *S6Select[T]) f8BuildSelect() error {
 }
 
 // F8First 执行查询
-func (p7this *S6Select[T]) F8First(i9ctx context.Context) (*T, error) {
+func (p7this *S6SelectBuilder[T]) F8First(i9ctx context.Context) (*T, error) {
 	p7s6query, _ := p7this.F8BuildQuery()
 
 	// 执行查询
@@ -242,7 +242,7 @@ func (p7this *S6Select[T]) F8First(i9ctx context.Context) (*T, error) {
 
 	// new 一个类型 T 的变量
 	t4p7T := new(T)
-	// 获取类型 T 对应的 orm 映射模型
+	// 获取类型 T 对应的映射模型
 	t4s6model, err2 := p7this.i9session.f8GetS6Monitor().i9Registry.F8Get(t4p7T)
 	if nil != err2 {
 		return nil, err2
@@ -254,7 +254,7 @@ func (p7this *S6Select[T]) F8First(i9ctx context.Context) (*T, error) {
 }
 
 // F8AsSubQuery 构造子查询
-func (p7this *S6Select[T]) F8AsSubQuery(alias string) S6SubQuery {
+func (p7this *S6SelectBuilder[T]) F8AsSubQuery(alias string) S6SubQuery {
 	t4i9from := p7this.i9from
 	if nil == t4i9from {
 		t4i9from = F8NewS6Table(new(T))
@@ -268,9 +268,9 @@ func (p7this *S6Select[T]) F8AsSubQuery(alias string) S6SubQuery {
 	}
 }
 
-func F8NewS6Select[T any](i9Session I9Session) *S6Select[T] {
+func F8NewS6SelectBuilder[T any](i9Session I9Session) *S6SelectBuilder[T] {
 	t4p7s6monitor := i9Session.f8GetS6Monitor()
-	return &S6Select[T]{
+	return &S6SelectBuilder[T]{
 		i9session: i9Session,
 		s6QueryBuilder: s6QueryBuilder{
 			s6Monitor: t4p7s6monitor,

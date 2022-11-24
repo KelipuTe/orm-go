@@ -17,14 +17,14 @@ func TestUpdateBuild(p7s6t *testing.T) {
 	}{
 		{
 			name: "update_without_column",
-			i9Builder: F8NewS6Update[S6APPUserModel](p7s6DB).
+			i9Builder: F8NewS6UpdateBuilder[S6APPUserModel](p7s6DB).
 				F8SetEntity(&S6APPUserModel{Id: 11, Name: "aa", Age: 22, Sex: 1}),
 			wantQuery: nil,
 			wantErr:   internal.ErrUpdateWithoutColumn,
 		},
 		{
 			name: "update_without_where",
-			i9Builder: F8NewS6Update[S6APPUserModel](p7s6DB).
+			i9Builder: F8NewS6UpdateBuilder[S6APPUserModel](p7s6DB).
 				F8SetEntity(&S6APPUserModel{Id: 11, Name: "aa", Age: 22, Sex: 1}).
 				F8SetUpdate(F8NewS6Column("Name")),
 			wantQuery: nil,
@@ -32,7 +32,7 @@ func TestUpdateBuild(p7s6t *testing.T) {
 		},
 		{
 			name: "update_one",
-			i9Builder: F8NewS6Update[S6APPUserModel](p7s6DB).
+			i9Builder: F8NewS6UpdateBuilder[S6APPUserModel](p7s6DB).
 				F8SetEntity(&S6APPUserModel{Id: 11, Name: "aa", Age: 22, Sex: 1}).
 				F8SetUpdate(F8NewS6Column("Name")).
 				F8Where(F8NewS6Column("Id").F8Equal(11)),
@@ -44,7 +44,7 @@ func TestUpdateBuild(p7s6t *testing.T) {
 		},
 		{
 			name: "update_two",
-			i9Builder: F8NewS6Update[S6APPUserModel](p7s6DB).
+			i9Builder: F8NewS6UpdateBuilder[S6APPUserModel](p7s6DB).
 				F8SetEntity(&S6APPUserModel{Id: 11, Name: "aa", Age: 22, Sex: 1}).
 				F8SetUpdate(F8NewS6Column("Name"), F8NewS6Column("Age")).
 				F8Where(F8NewS6Column("Id").F8Equal(11)),
@@ -56,7 +56,7 @@ func TestUpdateBuild(p7s6t *testing.T) {
 		},
 		{
 			name: "update_one=one+1",
-			i9Builder: F8NewS6Update[S6APPUserModel](p7s6DB).
+			i9Builder: F8NewS6UpdateBuilder[S6APPUserModel](p7s6DB).
 				F8SetEntity(&S6APPUserModel{Id: 11, Name: "aa", Age: 22, Sex: 1}).
 				F8SetUpdate(F8NewS6Column("Age").ToAssignment(F8NewS6Column("Age").F8Add(1))).
 				F8Where(F8NewS6Column("Id").F8Equal(11)),
@@ -68,7 +68,7 @@ func TestUpdateBuild(p7s6t *testing.T) {
 		},
 		{
 			name: "update_one_part_raw",
-			i9Builder: F8NewS6Update[S6APPUserModel](p7s6DB).
+			i9Builder: F8NewS6UpdateBuilder[S6APPUserModel](p7s6DB).
 				F8SetEntity(&S6APPUserModel{Id: 11, Name: "aa", Age: 22, Sex: 1}).
 				F8SetUpdate(F8NewS6Column("Age").ToAssignment(F8NewS6PartRaw("`age`+1"))).
 				F8Where(F8NewS6Column("Id").F8Equal(11)),
@@ -80,7 +80,7 @@ func TestUpdateBuild(p7s6t *testing.T) {
 		},
 		{
 			name: "update_one_without_entity",
-			i9Builder: F8NewS6Update[S6APPUserModel](p7s6DB).
+			i9Builder: F8NewS6UpdateBuilder[S6APPUserModel](p7s6DB).
 				F8SetUpdate(F8NewS6Column("Name").ToAssignment("bb")).
 				F8Where(F8NewS6Column("Id").F8Equal(11)),
 			wantQuery: &S6Query{
