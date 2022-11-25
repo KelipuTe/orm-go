@@ -39,6 +39,7 @@ func (p7this s6ResultUseUnsafe) F8SetField(rows *sql.Rows) error {
 		return internal.ErrTooManyReturnedColumns
 	}
 
+	// 这里初始化的时候需要长度
 	s5ColumnValue := make([]any, len(s5ColumnName))
 	for i, t4ColumnName := range s5ColumnName {
 		// 通过数据库列名找到对应的结构体属性

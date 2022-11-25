@@ -224,7 +224,7 @@ func (p7this *S6SelectBuilder[T]) f8BuildSelect() error {
 	return nil
 }
 
-// F8First 执行查询
+// F8First 执行查询获取一条数据，用映射关系
 func (p7this *S6SelectBuilder[T]) F8First(i9ctx context.Context) (*T, error) {
 	p7s6Context := &S6QueryContext{
 		QueryType: "SELECT",
@@ -235,6 +235,21 @@ func (p7this *S6SelectBuilder[T]) F8First(i9ctx context.Context) (*T, error) {
 	p7s6Result := f8DoFirst[T](i9ctx, p7this.i9Session, &p7this.s6Monitor, p7s6Context)
 	if nil != p7s6Result.AnyResult {
 		return p7s6Result.AnyResult.(*T), p7s6Result.I9Err
+	}
+	return nil, p7s6Result.I9Err
+}
+
+// F8GetList 执行查询获取多条数据，用映射关系
+func (p7this *S6SelectBuilder[T]) F8GetList(i9ctx context.Context) ([]*T, error) {
+	p7s6Context := &S6QueryContext{
+		QueryType: "SELECT",
+		i9Builder: p7this,
+		p7s6Model: p7this.s6QueryBuilder.p7s6Model,
+		p7s6Query: nil,
+	}
+	p7s6Result := f8DoGetList[T](i9ctx, p7this.i9Session, &p7this.s6Monitor, p7s6Context)
+	if nil != p7s6Result.AnyResult {
+		return p7s6Result.AnyResult.([]*T), p7s6Result.I9Err
 	}
 	return nil, p7s6Result.I9Err
 }

@@ -36,6 +36,7 @@ func (p7this s6ResultUseReflect) F8SetField(rows *sql.Rows) error {
 		return internal.ErrTooManyReturnedColumns
 	}
 
+	// 这里初始化的时候需要长度
 	// s5ColumnValue 和 s5ColumnValueElem 最终都指向同一个对象
 	s5ColumnValue := make([]any, len(s5ColumnName))
 	s5ColumnValueElem := make([]reflect.Value, len(s5ColumnName))

@@ -1,6 +1,10 @@
 package v20
 
-import "orm-go/v20/internal"
+import (
+	"context"
+	"database/sql"
+	"orm-go/v20/internal"
+)
 
 type S6UpdateBuilder[T any] struct {
 	// p7Entity 需要修改的实体，解析它得到元数据
@@ -113,6 +117,17 @@ func (p7this *S6UpdateBuilder[T]) F8BuildQuery() (*S6Query, error) {
 		SQLString: p7this.s6QueryBuilder.sqlString.String(),
 		S5Value:   p7this.s6QueryBuilder.s5Value,
 	}, nil
+}
+
+func (p7this *S6UpdateBuilder[T]) F8EXEC(ctx context.Context) (sql.Result, error) {
+	p7s6Context := &S6QueryContext{
+		QueryType: "UPDATE",
+		i9Builder: p7this,
+		p7s6Model: p7this.s6QueryBuilder.p7s6Model,
+		p7s6Query: nil,
+	}
+	p7s6Result := f8DoEXEC(ctx, p7this.i9Session, &p7this.s6Monitor, p7s6Context)
+	return p7s6Result.I9SQLResult, p7s6Result.I9Err
 }
 
 func F8NewS6UpdateBuilder[T any](i9Session I9Session) *S6UpdateBuilder[T] {
