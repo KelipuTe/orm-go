@@ -5,8 +5,10 @@ import (
 	"orm-go/v20/internal"
 )
 
-// S6Column 对应 col_name
-// 即语句中表示[表、JOIN、子查询]中列的部分
+// #### type ####
+
+// S6Column 对应列
+// 即各个 Statement 里的 col_name，语句中表示[表、JOIN、子查询]中列的部分
 type S6Column struct {
 	// i9From 列对应的[表、JOIN、子查询]
 	i9From i9TableReference
@@ -16,9 +18,23 @@ type S6Column struct {
 	alias string
 }
 
-// f8BuildColumn 构造列
+// #### func ####
+
+func F8NewS6Column(name string) S6Column {
+	return S6Column{
+		i9From:    nil,
+		fieldName: name,
+		alias:     "",
+	}
+}
+
+// #### type func ####
+
+// f8BuildColumn 构造列 SQL
 // p7s6Builder 查询构造器
+// isUseAlias 用不用别名
 func (this S6Column) f8BuildColumn(p7s6Builder *s6QueryBuilder, isUseAlias bool) error {
+	// 初始化列名为空，默认找不到列
 	var columnName string = ""
 	var err error = internal.F8NewErrUnknownField(this.fieldName)
 
@@ -50,26 +66,6 @@ func (this S6Column) f8BuildColumn(p7s6Builder *s6QueryBuilder, isUseAlias bool)
 	return nil
 }
 
-func (this S6Column) F8As(alias string) S6Column {
-	return S6Column{
-		i9From:    this.i9From,
-		fieldName: this.fieldName,
-		alias:     alias,
-	}
-}
-
-func (this S6Column) ToAssignment(input any) S6Assignment {
-	i9Expr, ok := input.(i9Expression)
-	if !ok {
-		i9Expr = S6Value{Value: input}
-	}
-
-	return S6Assignment{
-		s6Column: this,
-		i9Expr:   i9Expr,
-	}
-}
-
 func (this S6Column) f8BuildSelectExpr(p7s6qb *s6QueryBuilder) error {
 	return this.f8BuildColumn(p7s6qb, true)
 }
@@ -86,7 +82,20 @@ func (this S6Column) f8BuildExpression(p7s6Builder *s6QueryBuilder) error {
 	return this.f8BuildColumn(p7s6Builder, false)
 }
 
+// f8BuildAssignment 赋值语句，对应，列 = 列，这种
 func (this S6Column) f8BuildAssignment() error { return nil }
+
+// ToAssignment 给列设置赋值语句，列 = 表达式
+func (this S6Column) ToAssignment(input any) S6Assignment {
+	i9Expr, ok := input.(i9Expression)
+	if !ok {
+		i9Expr = S6Value{Value: input}
+	}
+	return S6Assignment{
+		s6Column: this,
+		i9Expr:   i9Expr,
+	}
+}
 
 func (this S6Column) F8Equal(p any) S6WhereCondition {
 	return S6WhereCondition{
@@ -120,6 +129,16 @@ func (this S6Column) F8Like(p any) S6WhereCondition {
 	}
 }
 
+// F8As 给列设置别名
+func (this S6Column) F8As(alias string) S6Column {
+	return S6Column{
+		i9From:    this.i9From,
+		fieldName: this.fieldName,
+		alias:     alias,
+	}
+}
+
+// F8InQuery 代表 WHERE IN 查询，列 in (...)
 func (this S6Column) F8InQuery(sub S6SubQuery) S6WhereCondition {
 	return S6WhereCondition{
 		i9LeftExpr:  this,
@@ -128,18 +147,11 @@ func (this S6Column) F8InQuery(sub S6SubQuery) S6WhereCondition {
 	}
 }
 
+// F8Add 赋值操作，列 = 列 + n
 func (this S6Column) F8Add(num any) S6MathExpression {
 	return S6MathExpression{
 		i9LeftExpr:  this,
 		s6Operator:  c5OperatorAdd,
 		i9RightExpr: f8NewI9Expression(num),
-	}
-}
-
-func F8NewS6Column(name string) S6Column {
-	return S6Column{
-		i9From:    nil,
-		fieldName: name,
-		alias:     "",
 	}
 }

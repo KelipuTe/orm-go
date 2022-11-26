@@ -1,21 +1,20 @@
 package v20
 
-// i9Expression 对应 i9Expr
-// SELECT Statement 里的 i9Expr
-// 可以是：列、聚合函数、查询条件、值
+// i9Expression 对应表达式
+// 即 SELECT Statement 里的 expr。可以是：列、聚合函数、查询条件、值。
 type i9Expression interface {
-	// f8BuildExpression 构造 i9Expr
+	// f8BuildExpression 构造表达式 SQL
 	f8BuildExpression(p7s6Builder *s6QueryBuilder) error
 }
 
-// f8NewI9Expression 把输入转换成 i9Expr
+// f8NewI9Expression 把输入转换成表达式
 func f8NewI9Expression(input any) i9Expression {
 	switch input.(type) {
 	case i9Expression:
-		// 如果是 i9Expr 就断言一下丢回去
+		// 如果是表达式，就断言一下丢回去
 		return input.(i9Expression)
 	default:
-		// 如果不是 i9Expr 就转换成 value
+		// 如果不是表达式，就转换成值
 		return F8NewS6Value(input)
 	}
 }

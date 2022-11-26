@@ -6,7 +6,7 @@ import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"log"
-	v20 "orm-go/v20"
+	"orm-go/v20"
 	"orm-go/v20/middleware"
 )
 

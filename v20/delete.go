@@ -6,6 +6,7 @@ import (
 	"orm-go/v20/internal"
 )
 
+// S6DeleteBuilder DELETE 构造器
 type S6DeleteBuilder[T any] struct {
 	// p7Entity 需要修改的实体，解析它得到元数据
 	p7Entity *T
@@ -14,6 +15,17 @@ type S6DeleteBuilder[T any] struct {
 
 	i9Session I9Session
 	s6QueryBuilder
+}
+
+func F8NewS6DeleteBuilder[T any](i9Session I9Session) *S6DeleteBuilder[T] {
+	t4p7s6monitor := i9Session.f8GetS6Monitor()
+	return &S6DeleteBuilder[T]{
+		i9Session: i9Session,
+		s6QueryBuilder: s6QueryBuilder{
+			s6Monitor: t4p7s6monitor,
+			quote:     t4p7s6monitor.i9Dialect.f8GetQuoter(),
+		},
+	}
 }
 
 func (p7this *S6DeleteBuilder[T]) F8SetEntity(p7Entity *T) *S6DeleteBuilder[T] {
@@ -77,15 +89,4 @@ func (p7this *S6DeleteBuilder[T]) F8EXEC(ctx context.Context) (sql.Result, error
 	}
 	p7s6Result := f8DoEXEC(ctx, p7this.i9Session, &p7this.s6Monitor, p7s6Context)
 	return p7s6Result.I9SQLResult, p7s6Result.I9Err
-}
-
-func F8NewS6DeleteBuilder[T any](i9Session I9Session) *S6DeleteBuilder[T] {
-	t4p7s6monitor := i9Session.f8GetS6Monitor()
-	return &S6DeleteBuilder[T]{
-		i9Session: i9Session,
-		s6QueryBuilder: s6QueryBuilder{
-			s6Monitor: t4p7s6monitor,
-			quote:     t4p7s6monitor.i9Dialect.f8GetQuoter(),
-		},
-	}
 }
