@@ -83,7 +83,7 @@ func (this S6Column) f8BuildExpression(p7s6Builder *s6QueryBuilder) error {
 }
 
 // f8BuildAssignment 赋值语句，对应，列 = 列，这种
-func (this S6Column) f8BuildAssignment() error { return nil }
+func (this S6Column) f8BuildAssignment(*s6QueryBuilder) error { return nil }
 
 // ToAssignment 给列设置赋值语句，列 = 表达式
 func (this S6Column) ToAssignment(input any) S6Assignment {

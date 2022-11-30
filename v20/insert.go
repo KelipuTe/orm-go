@@ -7,7 +7,7 @@ import (
 	"orm-go/v20/metadata"
 )
 
-// INSERT 查询构造器
+// S6InsertBuilder INSERT 查询构造器
 type S6InsertBuilder[T any] struct {
 	// s5p7Entity 代表要插入的数据，解析它得到原数据
 	s5p7Entity []*T

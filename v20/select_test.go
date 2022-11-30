@@ -687,6 +687,19 @@ func TestSelectJoin(p7s6t *testing.T) {
 			},
 		},
 		{
+			name: "a_join_b_using",
+			queryBuilder: func() I9QueryBuilder {
+				t1 := F8NewS6Table(&S6APPUserOrder{})
+				t2 := F8NewS6Table(&S6APPUserInfoModel{})
+				return F8NewS6SelectBuilder[S6APPUserOrder](p7s6DB).
+					F8From(t1.F8Join(t2).F8Using(F8NewS6Column("UserId")))
+			}(),
+			wantQuery: &S6Query{
+				SQLString: "SELECT * FROM (`app_user_order` JOIN `app_user_info` USING (`user_id`));",
+				S5Value:   nil,
+			},
+		},
+		{
 			name: "a_use_alias_join_b",
 			queryBuilder: func() I9QueryBuilder {
 				t1 := F8NewS6Table(&S6APPUserModel{}).F8As("t1")

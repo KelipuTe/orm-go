@@ -87,18 +87,12 @@ func (p7this *S6UpdateBuilder[T]) F8BuildQuery() (*S6Query, error) {
 			p7this.s6QueryBuilder.f8WrapWithQuote(p7s6ModelField.ColumnName)
 			p7this.s6QueryBuilder.sqlString.WriteString("=?")
 			t4EntityValue, err2 := t4i9result.F8GetField(p7s6ModelField.FieldName)
-			if err2 != nil {
+			if nil != err2 {
 				return nil, err2
 			}
 			p7this.f8AddParameter(t4EntityValue)
 		case S6Assignment:
-			p7s6ModelField, ok := p7this.s6QueryBuilder.p7s6Model.M3FieldToColumn[t4value2.s6Column.fieldName]
-			if !ok {
-				return nil, internal.F8NewErrUnknownField(t4value2.s6Column.fieldName)
-			}
-			p7this.s6QueryBuilder.f8WrapWithQuote(p7s6ModelField.ColumnName)
-			p7this.s6QueryBuilder.sqlString.WriteByte('=')
-			err = p7this.f8BuildExpression(t4value2.i9Expr)
+			err = t4value2.f8BuildAssignment(&p7this.s6QueryBuilder)
 			if nil != err {
 				return nil, err
 			}

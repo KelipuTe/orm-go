@@ -12,6 +12,8 @@ type S6Join struct {
 	i9RightReference i9TableReference
 	// s5On JOIN ... ON 后面的
 	s5On []S6WhereCondition
+	// s5Using USING 后面的
+	s5Using []S6Column
 }
 
 func (this S6Join) f8GetTableReferenceAlies() string {
@@ -49,6 +51,20 @@ func (this S6Join) f8BuildTableReference(p7s6Builder *s6QueryBuilder) error {
 		if nil != err {
 			return err
 		}
+	}
+
+	if 0 < len(this.s5Using) {
+		p7s6Builder.sqlString.WriteString(" USING (")
+		for i, t4value := range this.s5Using {
+			if i > 0 {
+				p7s6Builder.sqlString.WriteByte(',')
+			}
+			err = t4value.f8BuildColumn(p7s6Builder, false)
+			if nil != err {
+				return err
+			}
+		}
+		p7s6Builder.sqlString.WriteByte(')')
 	}
 
 	p7s6Builder.sqlString.WriteByte(')')
@@ -102,5 +118,14 @@ func (this JoinBuilder) F8On(s5condition ...S6WhereCondition) S6Join {
 		operator:         this.operator,
 		i9RightReference: this.i9RightReference,
 		s5On:             s5condition,
+	}
+}
+
+func (this JoinBuilder) F8Using(s5s6Column ...S6Column) S6Join {
+	return S6Join{
+		i9LeftReference:  this.i9LeftReference,
+		operator:         this.operator,
+		i9RightReference: this.i9RightReference,
+		s5Using:          s5s6Column,
 	}
 }
