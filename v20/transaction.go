@@ -25,15 +25,15 @@ func (p7this *S6Tx) f8DoEXECContext(ctx context.Context, query string, args ...a
 	return p7this.p7s6SqlTx.ExecContext(ctx, query, args...)
 }
 
-func (p7this *S6Tx) Commit() error {
+func (p7this *S6Tx) F8Commit() error {
 	return p7this.p7s6SqlTx.Commit()
 }
 
-func (p7this *S6Tx) Rollback() error {
+func (p7this *S6Tx) F8Rollback() error {
 	return p7this.p7s6SqlTx.Rollback()
 }
 
-func (p7this *S6Tx) RollbackIfNotCommit() error {
+func (p7this *S6Tx) F8RollbackIfNotCommit() error {
 	err := p7this.p7s6SqlTx.Rollback()
 	if err != sql.ErrTxDone {
 		return err

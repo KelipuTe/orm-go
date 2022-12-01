@@ -82,10 +82,10 @@ func (this S6Column) f8BuildExpression(p7s6Builder *s6QueryBuilder) error {
 	return this.f8BuildColumn(p7s6Builder, false)
 }
 
-// f8BuildAssignment 赋值语句，对应，列 = 列，这种
+// f8BuildAssignment 赋值语句，对应，列 = 列
 func (this S6Column) f8BuildAssignment(*s6QueryBuilder) error { return nil }
 
-// ToAssignment 给列设置赋值语句，列 = 表达式
+// ToAssignment 赋值语句，对应，列 = 表达式
 func (this S6Column) ToAssignment(input any) S6Assignment {
 	i9Expr, ok := input.(i9Expression)
 	if !ok {
@@ -129,7 +129,7 @@ func (this S6Column) F8Like(p any) S6WhereCondition {
 	}
 }
 
-// F8As 给列设置别名
+// F8As 设置别名
 func (this S6Column) F8As(alias string) S6Column {
 	return S6Column{
 		i9From:    this.i9From,
@@ -138,7 +138,7 @@ func (this S6Column) F8As(alias string) S6Column {
 	}
 }
 
-// F8InQuery 代表 WHERE IN 查询，列 in (...)
+// F8InQuery WHERE IN 查询，列 in (...)
 func (this S6Column) F8InQuery(sub S6SubQuery) S6WhereCondition {
 	return S6WhereCondition{
 		i9LeftExpr:  this,
@@ -147,7 +147,7 @@ func (this S6Column) F8InQuery(sub S6SubQuery) S6WhereCondition {
 	}
 }
 
-// F8Add 赋值操作，列 = 列 + n
+// F8Add 赋值语句，对应，列 = 列 + n
 func (this S6Column) F8Add(num any) S6MathExpression {
 	return S6MathExpression{
 		i9LeftExpr:  this,

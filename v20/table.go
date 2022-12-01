@@ -10,7 +10,7 @@ type S6Table struct {
 	alias string
 }
 
-// F8As 给表设置别名
+// F8As 设置别名
 func (this S6Table) F8As(alias string) S6Table {
 	return S6Table{
 		p7Entity: this.p7Entity,
@@ -18,7 +18,7 @@ func (this S6Table) F8As(alias string) S6Table {
 	}
 }
 
-// F8Column 创建带表的列 `table_name`.`column_name`
+// F8Column 创建带表信息的列 `table_name`.`column_name`
 func (this S6Table) F8Column(name string) S6Column {
 	return S6Column{
 		i9From:    this,

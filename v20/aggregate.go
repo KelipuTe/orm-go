@@ -33,7 +33,7 @@ func F8Avg(name string) S6Aggregate {
 
 // #### type func ####
 
-// f8BuildAggregate 构造聚合函数的 SQL
+// f8BuildAggregate 构造聚合函数 SQL
 func (this S6Aggregate) f8BuildAggregate(p7s6Builder *s6QueryBuilder, isUseAlias bool) error {
 	p7s6Builder.sqlString.WriteString(this.name)
 	p7s6Builder.sqlString.WriteByte('(')
@@ -92,7 +92,7 @@ func (this S6Aggregate) LessThan(input any) S6WhereCondition {
 	}
 }
 
-// F8As 给列设置别名
+// F8As 设置别名
 func (this S6Aggregate) F8As(alias string) S6Aggregate {
 	return S6Aggregate{
 		name:     this.name,

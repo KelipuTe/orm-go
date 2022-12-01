@@ -10,6 +10,7 @@ type S6PartRaw struct {
 	s5Value []any
 }
 
+// f8PartRaw 构造一段原生 SQL 对应的 SQL
 func (this S6PartRaw) f8PartRaw(p7s6qb *s6QueryBuilder) error {
 	p7s6qb.sqlString.WriteString(this.sqlString)
 	if 0 < len(this.s5Value) {
@@ -34,6 +35,7 @@ func (this S6PartRaw) f8BuildExpression(p7s6Builder *s6QueryBuilder) error {
 	return this.f8PartRaw(p7s6Builder)
 }
 
+// F8ToWhereCondition 转换成查询条件
 func (this S6PartRaw) F8ToWhereCondition() S6WhereCondition {
 	return S6WhereCondition{
 		i9LeftExpr:  this,

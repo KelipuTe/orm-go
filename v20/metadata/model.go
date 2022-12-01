@@ -20,12 +20,12 @@ type I9TableName interface {
 type S6Model struct {
 	// TableName 结构体对应的表名
 	TableName string
+	// S5P7S6ModelField 切片：index => 结构体属性
+	S5P7S6ModelField []*S6ModelField
 	// M3FieldToColumn map：结构体属性 => 数据库列名
 	M3FieldToColumn map[string]*S6ModelField
 	// M3ColumnToField map：数据库列名 => 结构体属性
 	M3ColumnToField map[string]*S6ModelField
-	// S5P7S6ModelField 切片：index => 结构体属性
-	S5P7S6ModelField []*S6ModelField
 }
 
 // F8S6ModelOption 方法抽象：针对 S6Model 的 Option 设计模式

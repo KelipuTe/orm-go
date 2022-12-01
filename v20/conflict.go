@@ -9,10 +9,10 @@ type S6Conflict struct {
 	S5Assignment []i9Assignment
 }
 
-// S6ConflictBuilder Conflict 构造器
+// S6ConflictBuilder ON Conflict 查询构造器
 // 设计这玩意，主要是为了把常规的 INSERT 语句和带 ON CONFLICT 的 INSERT 语句区分开
 type S6ConflictBuilder[T any] struct {
-	// p7s6Insert INSERT 构造器
+	// p7s6Insert INSERT 查询构造器
 	p7s6Insert *S6InsertBuilder[T]
 	// S5ConflictColumn 用于判断冲突的列
 	S5ConflictColumn []S6Column

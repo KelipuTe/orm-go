@@ -6,6 +6,7 @@ import (
 	"orm-go/v20/internal"
 )
 
+// S6UpdateBuilder UPDATE 查询构造器
 type S6UpdateBuilder[T any] struct {
 	// p7Entity 需要修改的实体，解析它得到元数据
 	p7Entity *T

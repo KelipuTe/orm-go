@@ -5,9 +5,12 @@ import (
 	"database/sql"
 )
 
+// S6RawBuilder 原生 SQL 查询构造器
 type S6RawBuilder[T any] struct {
+	// 带有占位符的 SQL 语句
 	sqlString string
-	s5Value   []any
+	// SQL 语句中占位符对应的参数
+	s5Value []any
 
 	i9Session I9Session
 	s6QueryBuilder

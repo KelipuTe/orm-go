@@ -126,7 +126,7 @@ func (p7this *S6InsertBuilder[T]) F8BuildQuery() (*S6Query, error) {
 	}, nil
 }
 
-// F8OnConflictBuilder 跳到中间 builder，处理 OnConflict 的内容
+// F8OnConflictBuilder 跳到中间 builder，处理 On Conflict 的内容
 func (p7this *S6InsertBuilder[T]) F8OnConflictBuilder() *S6ConflictBuilder[T] {
 	return &S6ConflictBuilder[T]{
 		p7s6Insert: p7this,

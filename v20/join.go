@@ -112,6 +112,7 @@ type JoinBuilder struct {
 	i9RightReference i9TableReference
 }
 
+// F8On 设置 ON
 func (this JoinBuilder) F8On(s5condition ...S6WhereCondition) S6Join {
 	return S6Join{
 		i9LeftReference:  this.i9LeftReference,
@@ -121,6 +122,7 @@ func (this JoinBuilder) F8On(s5condition ...S6WhereCondition) S6Join {
 	}
 }
 
+// F8Using 设置 USING
 func (this JoinBuilder) F8Using(s5s6Column ...S6Column) S6Join {
 	return S6Join{
 		i9LeftReference:  this.i9LeftReference,

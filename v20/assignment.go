@@ -17,7 +17,7 @@ type S6Assignment struct {
 	i9Expr i9Expression
 }
 
-// f8BuildAssignment 赋值语句，对应，列 = 表达式，这种
+// f8BuildAssignment 构建赋值语句 SQL，对应，列 = 表达式，这种
 func (this S6Assignment) f8BuildAssignment(p7s6Builder *s6QueryBuilder) error {
 	p7s6ModelField, ok := p7s6Builder.p7s6Model.M3FieldToColumn[this.s6Column.fieldName]
 	if !ok {

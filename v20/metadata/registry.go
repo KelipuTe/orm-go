@@ -83,7 +83,7 @@ func (p7this *S6Registry) F8Register(p7s6Struct any, s5f8Option ...F8S6ModelOpti
 	return p7s6om, nil
 }
 
-// f8ParseModel 解析结构体
+// f8ParseModel 解析结构体获取元数据
 func (p7this *S6Registry) f8ParseModel(p7s6Model any) (*S6Model, error) {
 	i9ModelType := reflect.TypeOf(p7s6Model)
 	// 只接受一级结构体指针

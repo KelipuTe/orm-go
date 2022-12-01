@@ -1,6 +1,6 @@
 package v20
 
-// i9SelectExpr 对应询表达式
+// i9SelectExpr 对应查询表达式
 // 即 SELECT Statement 里的 select_expr
 // SELECT 语句 SELECT 后面 FROM 前面的那部分
 type i9SelectExpr interface {

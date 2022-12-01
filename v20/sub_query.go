@@ -2,14 +2,19 @@ package v20
 
 import "orm-go/v20/internal"
 
+// S6SubQuery 对应子查询
 type S6SubQuery struct {
+	// s5Select SELECT 后面的
 	s5Select []i9SelectExpr
-	i9From   i9TableReference
-	alias    string
-
+	// i9From FROM 后面的
+	i9From i9TableReference
+	// alias 别名
+	alias string
+	// 构造子查询语句
 	i9Builder I9QueryBuilder
 }
 
+// F8BuildSubQuery 构造子查询语句
 func (this S6SubQuery) F8BuildSubQuery(p7s6Builder *s6QueryBuilder, isUseAlias bool) error {
 	query, err := this.i9Builder.F8BuildQuery()
 	if err != nil {

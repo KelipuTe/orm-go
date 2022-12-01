@@ -27,7 +27,7 @@ func TestS6TxF8Commit(p7s6t *testing.T) {
 	p7s6Tx, err := p7s6DB.F8BeginTx(context.Background(), &sql.TxOptions{})
 	assert.Nil(p7s6t, err)
 
-	err = p7s6Tx.Commit()
+	err = p7s6Tx.F8Commit()
 	assert.Nil(p7s6t, err)
 }
 
@@ -50,6 +50,6 @@ func TestS6TxF8RollBack(p7s6t *testing.T) {
 	p7s6Tx, err := p7s6DB.F8BeginTx(context.Background(), &sql.TxOptions{})
 	assert.Nil(p7s6t, err)
 
-	err = p7s6Tx.Rollback()
+	err = p7s6Tx.F8Rollback()
 	assert.Nil(p7s6t, err)
 }

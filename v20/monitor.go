@@ -10,7 +10,8 @@ import (
 
 // #### type ####
 
-// s6Monitor 控制器：构造 I9Session 的时候，控制[结果集、方言]的使用哪个实现。
+// s6Monitor 控制器，控制和数据库有关系的抽象的实现
+// 构造 I9Session 的时候，控制[结果集、方言]使用哪个实现。
 type s6Monitor struct {
 	// i9Registry 元数据注册中心
 	i9Registry metadata.I9Registry
